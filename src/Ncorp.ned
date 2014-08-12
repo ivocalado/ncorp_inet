@@ -116,6 +116,16 @@ simple Ncorp like IUDPApp
 		bool ETXUseConfigFile = default(true);
         bool ETXDisableEvents = default(false); //Se verdadeiro, desabilita os eventos
         
+        string destAddress = default(""); // Se vazio, indica que o nó não deve transmitir
+        int flowId = default(-1); //Se -1 gera randomicamente
+        int messageLength @unit(B) = default(32 * 1500B); // length of messages to generate, in bytes
+        double sendTime @unit(s) = default(-1s); //Se -1 não transmite
+        
+        bool CCACKUseSingleGeneration = default(true);
+        int CCACKGenerationSize = default(32); //Define o tamanho da geração em número de pacotes
+        int CCACKPayloadSize @unit (B) = default(1500 B);
+        double CCACKFlowTimeout @unit(s) = default(300 s);
+        
         @signal[sentPk](type=cPacket);
         @signal[rcvdPk](type=cPacket);
         @signal[dropPk](type=cPacket);
@@ -126,5 +136,7 @@ simple Ncorp like IUDPApp
     gates:
         input udpIn @labels(UDPControlInfo/up);
         output udpOut @labels(UDPControlInfo/down);
+        input wlanIn;
+        output wlanOut;
 }
 

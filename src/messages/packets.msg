@@ -89,14 +89,15 @@ packet CodedEAck extends NcorpPacket
     name = "coded-eack";
     uint16_t flowId;
     uint16_t generationId;
-    IPv4Address relay;
+    IPv4Address nextHopAddr;
 }
 
 packet CodedDataAck extends NcorpPacket
 {
     type = CODED_DATA_ACK;
     name = "coded-data-ack";
-    IPv4Address relayAddr;//Especifica quem mandou o pacote
+    IPv4Address flowSrcAddr; //Especifica a origem do fluxo
+    IPv4Address flowDstAddr; //Especifica o destino do fluxo
     uint16_t flowId;
     uint16_t baseWindow;
     uint16_t generationId;
@@ -110,11 +111,5 @@ packet CodedDataAck extends NcorpPacket
     //repassado diretamente no objeto payload 
     Payload payload;
     size_t payloadSize;
-}
-
-packet CodedAppPkt
-{
-    uint16_t flowId;
-    Payload payload; 
 }
 

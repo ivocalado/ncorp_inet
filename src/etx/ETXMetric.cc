@@ -416,13 +416,6 @@ std::list<IPv4Address> ETXMetric::findCandidateSet(IPv4Address target) {
                 });
     }
 
-    cerr << "Forward Ser recuperado" << endl;
-    for (IPv4Address addr : result) {
-        fprintf(stderr, "[Node = %s]  (%s <=> %s) ==> %f\n", getMyNetAddr().str(true).c_str(),
-                addr.str(true).c_str(), target.str(true).c_str(),
-                cSets[target].position.distance(cSets[addr].position));
-    }
-
     return result;
 }
 

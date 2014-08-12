@@ -30,6 +30,7 @@
 #include "AppBase.h"
 #include "UDPSocket.h"
 #include "Coord.h"
+#include "CcackBaseline.h"
 
 class ETXMetric;
 
@@ -47,9 +48,10 @@ class INET_API Ncorp : public AppBase
     UDPSocket socket;
     int connectionPort;
     int outputInterface;
-
     ETXMetric* metric;
-
+    std::shared_ptr<ncorp::CcackBaseline> ccackBaseline;
+    cGate* appOutputGate;
+    cGate* appInputGate;
 
   protected:
     virtual int numInitStages() const {return 4;}
@@ -62,10 +64,23 @@ class INET_API Ncorp : public AppBase
     virtual bool stopApp(IDoneCallback *doneCallback);
     virtual bool crashApp(IDoneCallback *doneCallback);
 
+    void handleMacControlMsg(cMessage* msg);
+    void sendControlMsgToMac(cMessage* msg);
+    virtual void handleMessage(cMessage *msg);
+
     virtual void handleLowerMsg(cMessage *);
     virtual void handleSelfMsg(cMessage* msg);
+    bool isUpstream(IPv4Address relay, IPv4Address target);
+    void handleEAckPkt(CodedEAck* packet);
+    void handleCodedAckPkt(CodedAck* packet, IPv4Address from);
+    simtime_t handleCodedDataAckPkt(CodedDataAck* packet, IPv4Address from);
+
+    void deliverReceivedBlock(uint16_t flowId, IPv4Address from, std::shared_ptr<std::vector<uint8_t> > block);
+    void askForChannelOpportunity();
+
 
   public:
+    std::list<IPv4Address> findCandidateSet(IPv4Address target);//Retorna o conjunto de candidatos baseados na localização geográfica dos nos
     Ncorp();
     ~Ncorp();
 

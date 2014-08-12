@@ -64,17 +64,6 @@ public:
         packet->addBitLength(packet_size);
     }
 
-    void configure(NetwPkt* packet) {
-        if (!packet)
-            return;
-        uint64_t packet_size = 0;
-        packet_size += 8; //packet type
-        packet_size += 32; //src addr
-        packet_size += 32; //dest addr
-        packet_size += 24; //seq numb
-        packet->addBitLength(packet_size);
-    }
-
     void configure(CodedEAck* packet) {
         if (!packet)
             return;

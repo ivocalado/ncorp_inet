@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for Ncorp-INETMANET
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -I/home/ivocalado/inetmanet/src -I/home/ivocalado/inetmanet/src/networklayer/common -I/home/ivocalado/inetmanet/src/transport/tcp_common -I/home/ivocalado/inetmanet/src/wpan/networklayer/contract -I/home/ivocalado/inetmanet/src/linklayer/common -I/home/ivocalado/inetmanet/src/networklayer/manetrouting/base -I/home/ivocalado/inetmanet/src/networklayer/autorouting/ipv4 -I/home/ivocalado/inetmanet/src/util/headerserializers/tcp -I/home/ivocalado/inetmanet/src/networklayer/ipv6tunneling -I/home/ivocalado/inetmanet/src/mobility -I/home/ivocalado/inetmanet/src/wpan/linklayer/ieee802154/mac -I/home/ivocalado/inetmanet/src/world/radio -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/mac -I/home/ivocalado/inetmanet/src/networklayer/ipv6 -I/home/ivocalado/inetmanet/src/networklayer/icmpv6 -I/home/ivocalado/inetmanet/src/world/powercontrol -I/home/ivocalado/inetmanet/src/linklayer/ieee80211mesh/locator -I/home/ivocalado/inetmanet/src/networklayer/ipv4 -I/home/ivocalado/inetmanet/src/util -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/radio/errormodel -I/home/ivocalado/inetmanet/src/util/headerserializers/ipv4 -I/home/ivocalado/inetmanet/src/wpan/linklayer/ieee802154/contract -I/home/ivocalado/inetmanet/src/util/headerserializers -I/home/ivocalado/inetmanet/src/battery/models -I/home/ivocalado/inetmanet/src/linklayer/radio/propagation -I/home/ivocalado/inetmanet/src/networklayer/contract -I/home/ivocalado/inetmanet/src/world/obstacles -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/radio -I/home/ivocalado/inetmanet/src/networklayer/arp -I/home/ivocalado/inetmanet/src/applications -I/home/ivocalado/inetmanet/src/transport/sctp -I/home/ivocalado/inetmanet/src/base -I/home/ivocalado/inetmanet/src/util/headerserializers/sctp -I/home/ivocalado/inetmanet/src/linklayer/contract -I/home/ivocalado/inetmanet/src/transport/udp -I/home/ivocalado/inetmanet/src/applications/pingapp -I/home/ivocalado/inetmanet/src/linklayer/radio -I/home/ivocalado/inetmanet/src/transport/contract -I/home/ivocalado/inetmanet/src/linklayer/ethernet -I/home/ivocalado/inetmanet/src/util/headerserializers/udp -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/mgmt -I/home/ivocalado/inetmanet/src/wpan/phyLayer/ieee802154 -I/home/ivocalado/inetmanet/src/status -I/home/ivocalado/inetmanet/src/networklayer/xmipv6 -I/home/ivocalado/inetmanet/src/mobility/models -L/home/ivocalado/inetmanet/out/$(CONFIGNAME)/src -linet -DINET_IMPORT -KINETMANET_2_0_PROJ=/home/ivocalado/inetmanet
+#  opp_makemake -f --deep -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/kodo/src -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/bundle_dependencies/boost-e92f30/master -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/bundle_dependencies/fifi-6ca972/master/src -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/bundle_dependencies/sak-602ce9/master/src -I/home/ivocalado/inetmanet/src -I/home/ivocalado/inetmanet/src/networklayer/common -I/home/ivocalado/inetmanet/src/transport/tcp_common -I/home/ivocalado/inetmanet/src/wpan/networklayer/contract -I/home/ivocalado/inetmanet/src/linklayer/common -I/home/ivocalado/inetmanet/src/networklayer/manetrouting/base -I/home/ivocalado/inetmanet/src/networklayer/autorouting/ipv4 -I/home/ivocalado/inetmanet/src/util/headerserializers/tcp -I/home/ivocalado/inetmanet/src/networklayer/ipv6tunneling -I/home/ivocalado/inetmanet/src/mobility -I/home/ivocalado/inetmanet/src/wpan/linklayer/ieee802154/mac -I/home/ivocalado/inetmanet/src/world/radio -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/mac -I/home/ivocalado/inetmanet/src/networklayer/ipv6 -I/home/ivocalado/inetmanet/src/networklayer/icmpv6 -I/home/ivocalado/inetmanet/src/world/powercontrol -I/home/ivocalado/inetmanet/src/linklayer/ieee80211mesh/locator -I/home/ivocalado/inetmanet/src/networklayer/ipv4 -I/home/ivocalado/inetmanet/src/util -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/radio/errormodel -I/home/ivocalado/inetmanet/src/util/headerserializers/ipv4 -I/home/ivocalado/inetmanet/src/wpan/linklayer/ieee802154/contract -I/home/ivocalado/inetmanet/src/util/headerserializers -I/home/ivocalado/inetmanet/src/battery/models -I/home/ivocalado/inetmanet/src/linklayer/radio/propagation -I/home/ivocalado/inetmanet/src/networklayer/contract -I/home/ivocalado/inetmanet/src/world/obstacles -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/radio -I/home/ivocalado/inetmanet/src/networklayer/arp -I/home/ivocalado/inetmanet/src/applications -I/home/ivocalado/inetmanet/src/transport/sctp -I/home/ivocalado/inetmanet/src/base -I/home/ivocalado/inetmanet/src/util/headerserializers/sctp -I/home/ivocalado/inetmanet/src/linklayer/contract -I/home/ivocalado/inetmanet/src/transport/udp -I/home/ivocalado/inetmanet/src/applications/pingapp -I/home/ivocalado/inetmanet/src/linklayer/radio -I/home/ivocalado/inetmanet/src/transport/contract -I/home/ivocalado/inetmanet/src/linklayer/ethernet -I/home/ivocalado/inetmanet/src/util/headerserializers/udp -I/home/ivocalado/inetmanet/src/linklayer/ieee80211/mgmt -I/home/ivocalado/inetmanet/src/wpan/phyLayer/ieee802154 -I/home/ivocalado/inetmanet/src/status -I/home/ivocalado/inetmanet/src/networklayer/xmipv6 -I/home/ivocalado/inetmanet/src/mobility/models -L/home/ivocalado/inetmanet/out/$(CONFIGNAME)/src -linet -DINET_IMPORT -KINETMANET_2_0_PROJ=/home/ivocalado/inetmanet
 #
 
 # Name of target to be created (-o option)
@@ -15,6 +15,10 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(CMDENV_LIBS)
 
 # C++ include paths (with -I)
 INCLUDE_PATH = \
+    -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/kodo/src \
+    -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/bundle_dependencies/boost-e92f30/master \
+    -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/bundle_dependencies/fifi-6ca972/master/src \
+    -I/home/ivocalado/work/UFCG/doutorado/workspace/dependencies/bundle_dependencies/sak-602ce9/master/src \
     -I$(INETMANET_2_0_PROJ)/src \
     -I$(INETMANET_2_0_PROJ)/src/networklayer/common \
     -I$(INETMANET_2_0_PROJ)/src/transport/tcp_common \
@@ -64,7 +68,8 @@ INCLUDE_PATH = \
     -Ietx \
     -Ihandler \
     -Ihelper \
-    -Imessages
+    -Imessages \
+    -Itransmitter
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -79,7 +84,18 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc and .msg files
-OBJS = $O/Ncorp.o $O/etx/ETXMetric.o $O/handler/EventHandler.o $O/helper/helper-functions-impl.o $O/messages/packets_m.o
+OBJS = \
+    $O/Ncorp.o \
+    $O/etx/ETXMetric.o \
+    $O/handler/EventHandler.o \
+    $O/helper/helper-functions-impl.o \
+    $O/transmitter/CcackBaseline.o \
+    $O/transmitter/HashMatrices.o \
+    $O/transmitter/Flow.o \
+    $O/transmitter/Binary8MatrixHelpers.o \
+    $O/transmitter/DiagonalRandomMatrix.o \
+    $O/transmitter/Generation.o \
+    $O/messages/packets_m.o
 
 # Message files
 MSGFILES = \
@@ -164,29 +180,53 @@ clean:
 	$(Q)-rm -f handler/*_m.cc handler/*_m.h
 	$(Q)-rm -f helper/*_m.cc helper/*_m.h
 	$(Q)-rm -f messages/*_m.cc messages/*_m.h
+	$(Q)-rm -f transmitter/*_m.cc transmitter/*_m.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES)  ./*.cc etx/*.cc handler/*.cc helper/*.cc messages/*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES)  ./*.cc etx/*.cc handler/*.cc helper/*.cc messages/*.cc transmitter/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 $O/Ncorp.o: Ncorp.cc \
 	Ncorp.h \
 	etx/ETXMetric.h \
 	handler/EventHandler.h \
+	messagecodes.h \
+	messages/PacketSizeConfigurator.h \
 	messages/packets_m.h \
+	transmitter/Binary8Arithmetic.h \
+	transmitter/Binary8MatrixHelpers.h \
+	transmitter/Buffers.h \
+	transmitter/CcackBaseline.h \
+	transmitter/Flow.h \
+	transmitter/Generation.h \
 	$(INETMANET_2_0_PROJ)/src/applications/AppBase.h \
 	$(INETMANET_2_0_PROJ)/src/base/Coord.h \
+	$(INETMANET_2_0_PROJ)/src/base/FSMA.h \
 	$(INETMANET_2_0_PROJ)/src/base/ILifecycle.h \
 	$(INETMANET_2_0_PROJ)/src/base/INETDefs.h \
 	$(INETMANET_2_0_PROJ)/src/base/INotifiable.h \
+	$(INETMANET_2_0_PROJ)/src/base/IPassiveQueue.h \
+	$(INETMANET_2_0_PROJ)/src/base/LifecycleOperation.h \
 	$(INETMANET_2_0_PROJ)/src/base/ModuleAccess.h \
+	$(INETMANET_2_0_PROJ)/src/base/NodeOperations.h \
 	$(INETMANET_2_0_PROJ)/src/base/NotificationBoard.h \
 	$(INETMANET_2_0_PROJ)/src/base/NotifierConsts.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/common/MACBase.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/common/WirelessMacBase.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/contract/Ieee802Ctrl_m.h \
 	$(INETMANET_2_0_PROJ)/src/linklayer/contract/MACAddress.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/contract/RadioState.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/ieee80211/mac/IQoSClassifier.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/ieee80211/mac/Ieee80211Consts.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/ieee80211/mac/Ieee80211Frame_m.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/ieee80211/mac/Ieee80211Mac.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/ieee80211/mac/WifiMode.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/ieee80211/radio/WifiPreambleType.h \
+	$(INETMANET_2_0_PROJ)/src/linklayer/radio/ModulationType.h \
 	$(INETMANET_2_0_PROJ)/src/mobility/IMobility.h \
 	$(INETMANET_2_0_PROJ)/src/mobility/models/MobilityAccess.h \
 	$(INETMANET_2_0_PROJ)/src/networklayer/common/IInterfaceTable.h \
@@ -221,6 +261,14 @@ $O/etx/ETXMetric.o: etx/ETXMetric.cc \
 $O/handler/EventHandler.o: handler/EventHandler.cc \
 	Ncorp.h \
 	handler/EventHandler.h \
+	messagecodes.h \
+	messages/packets_m.h \
+	transmitter/Binary8Arithmetic.h \
+	transmitter/Binary8MatrixHelpers.h \
+	transmitter/Buffers.h \
+	transmitter/CcackBaseline.h \
+	transmitter/Flow.h \
+	transmitter/Generation.h \
 	$(INETMANET_2_0_PROJ)/src/applications/AppBase.h \
 	$(INETMANET_2_0_PROJ)/src/base/Coord.h \
 	$(INETMANET_2_0_PROJ)/src/base/ILifecycle.h \
@@ -241,4 +289,68 @@ $O/messages/packets_m.o: messages/packets_m.cc \
 	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv6Address.h \
 	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPvXAddress.h \
 	$(INETMANET_2_0_PROJ)/src/util/FWMath.h
+$O/transmitter/Binary8MatrixHelpers.o: transmitter/Binary8MatrixHelpers.cc \
+	transmitter/Binary8Arithmetic.h \
+	transmitter/Binary8MatrixHelpers.h
+$O/transmitter/CcackBaseline.o: transmitter/CcackBaseline.cc \
+	Ncorp.h \
+	messagecodes.h \
+	messages/packets_m.h \
+	transmitter/Binary8Arithmetic.h \
+	transmitter/Binary8MatrixHelpers.h \
+	transmitter/Buffers.h \
+	transmitter/CcackBaseline.h \
+	transmitter/Flow.h \
+	transmitter/Generation.h \
+	$(INETMANET_2_0_PROJ)/src/applications/AppBase.h \
+	$(INETMANET_2_0_PROJ)/src/base/Coord.h \
+	$(INETMANET_2_0_PROJ)/src/base/ILifecycle.h \
+	$(INETMANET_2_0_PROJ)/src/base/INETDefs.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv4Address.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv6Address.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPvXAddress.h \
+	$(INETMANET_2_0_PROJ)/src/status/NodeStatus.h \
+	$(INETMANET_2_0_PROJ)/src/transport/contract/UDPSocket.h \
+	$(INETMANET_2_0_PROJ)/src/util/FWMath.h
+$O/transmitter/DiagonalRandomMatrix.o: transmitter/DiagonalRandomMatrix.cc \
+	transmitter/DiagonalRandomMatrix.h
+$O/transmitter/Flow.o: transmitter/Flow.cc \
+	Ncorp.h \
+	messagecodes.h \
+	messages/packets_m.h \
+	transmitter/Binary8Arithmetic.h \
+	transmitter/Binary8MatrixHelpers.h \
+	transmitter/Buffers.h \
+	transmitter/CcackBaseline.h \
+	transmitter/Flow.h \
+	transmitter/Generation.h \
+	$(INETMANET_2_0_PROJ)/src/applications/AppBase.h \
+	$(INETMANET_2_0_PROJ)/src/base/Coord.h \
+	$(INETMANET_2_0_PROJ)/src/base/ILifecycle.h \
+	$(INETMANET_2_0_PROJ)/src/base/INETDefs.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv4Address.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv6Address.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPvXAddress.h \
+	$(INETMANET_2_0_PROJ)/src/status/NodeStatus.h \
+	$(INETMANET_2_0_PROJ)/src/transport/contract/UDPSocket.h \
+	$(INETMANET_2_0_PROJ)/src/util/FWMath.h
+$O/transmitter/Generation.o: transmitter/Generation.cc \
+	helper/helper-functions.h \
+	messagecodes.h \
+	messages/packets_m.h \
+	transmitter/Binary8Arithmetic.h \
+	transmitter/Binary8MatrixHelpers.h \
+	transmitter/Buffers.h \
+	transmitter/DiagonalRandomMatrix.h \
+	transmitter/Generation.h \
+	transmitter/HashMatrices.h \
+	$(INETMANET_2_0_PROJ)/src/base/Coord.h \
+	$(INETMANET_2_0_PROJ)/src/base/INETDefs.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv4Address.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPv6Address.h \
+	$(INETMANET_2_0_PROJ)/src/networklayer/contract/IPvXAddress.h \
+	$(INETMANET_2_0_PROJ)/src/util/FWMath.h
+$O/transmitter/HashMatrices.o: transmitter/HashMatrices.cc \
+	transmitter/DiagonalRandomMatrix.h \
+	transmitter/HashMatrices.h
 
