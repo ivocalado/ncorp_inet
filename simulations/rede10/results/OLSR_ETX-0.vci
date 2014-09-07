@@ -1,0 +1,639 @@
+file 4380898 1409272349                                         
+version 2
+run OLSR_ETX-0-20140828-21:32:02-31863
+attr configname OLSR_ETX
+attr datetime 20140828-21:32:02
+attr experiment OLSR_ETX
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network ncorp_inetmanet.simulations.rede10.Net80211_aodv
+attr processid 31863
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 14  Net80211_aodv.fixhost[0].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 41  Net80211_aodv.host[0].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 58  Net80211_aodv.host[1].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 75  Net80211_aodv.host[2].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 92  Net80211_aodv.host[3].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 109  Net80211_aodv.host[4].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 126  Net80211_aodv.host[5].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 143  Net80211_aodv.host[6].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 160  Net80211_aodv.host[7].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 177  Net80211_aodv.host[8].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 194  Net80211_aodv.host[9].wlan[0].mgmt  dataQueueLen:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "data queue length, vector"
+vector 205  Net80211_aodv.fixhost[0].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 204  Net80211_aodv.fixhost[0].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 211  Net80211_aodv.host[0].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 210  Net80211_aodv.host[0].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 217  Net80211_aodv.host[1].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 216  Net80211_aodv.host[1].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 223  Net80211_aodv.host[2].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 222  Net80211_aodv.host[2].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 229  Net80211_aodv.host[3].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 228  Net80211_aodv.host[3].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 235  Net80211_aodv.host[4].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 234  Net80211_aodv.host[4].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 241  Net80211_aodv.host[5].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 240  Net80211_aodv.host[5].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 247  Net80211_aodv.host[6].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 246  Net80211_aodv.host[6].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 253  Net80211_aodv.host[7].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 252  Net80211_aodv.host[7].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 259  Net80211_aodv.host[8].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 258  Net80211_aodv.host[8].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 265  Net80211_aodv.host[9].wlan[0].mac  RadioState  ETV
+attr enum  "IDLE=0, OFF=4, RECV=1, SLEEP=3, TRANSMIT=2"
+attr enumname  RadioState
+vector 264  Net80211_aodv.host[9].wlan[0].mac  State  ETV
+attr enum  "BACKOFF=3, DEFER=1, IDLE=0, RECEIVE=8, WAITACK=4, WAITAIFS=2, WAITCTS=6, WAITMULTICAST=5, WAITSIFS=7"
+attr enumname  Ieee80211Mac
+vector 20  Net80211_aodv.fixhost[0].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 22  Net80211_aodv.fixhost[0].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 21  Net80211_aodv.fixhost[0].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 47  Net80211_aodv.host[0].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 49  Net80211_aodv.host[0].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 48  Net80211_aodv.host[0].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 64  Net80211_aodv.host[1].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 66  Net80211_aodv.host[1].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 65  Net80211_aodv.host[1].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 81  Net80211_aodv.host[2].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 83  Net80211_aodv.host[2].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 82  Net80211_aodv.host[2].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 98  Net80211_aodv.host[3].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 100  Net80211_aodv.host[3].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 99  Net80211_aodv.host[3].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 115  Net80211_aodv.host[4].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 117  Net80211_aodv.host[4].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 116  Net80211_aodv.host[4].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 132  Net80211_aodv.host[5].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 134  Net80211_aodv.host[5].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 133  Net80211_aodv.host[5].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 149  Net80211_aodv.host[6].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 151  Net80211_aodv.host[6].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 150  Net80211_aodv.host[6].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 166  Net80211_aodv.host[7].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 168  Net80211_aodv.host[7].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 167  Net80211_aodv.host[7].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 183  Net80211_aodv.host[8].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 185  Net80211_aodv.host[8].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 184  Net80211_aodv.host[8].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 200  Net80211_aodv.host[9].wlan[0].radio  bitrate:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx bitrate, vector"
+attr unit  bps
+vector 202  Net80211_aodv.host[9].wlan[0].radio  radioState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "radio state (enum), vector"
+vector 201  Net80211_aodv.host[9].wlan[0].radio  channelNo:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "channel no, vector"
+vector 164  Net80211_aodv.host[7].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 255  Net80211_aodv.host[7].wlan[0].mac  "throughput AC0"  ETV
+vector 163  Net80211_aodv.host[7].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 267  Net80211_aodv.host[9].wlan[0].mac  "throughput AC0"  ETV
+vector 237  Net80211_aodv.host[4].wlan[0].mac  "throughput AC0"  ETV
+vector 225  Net80211_aodv.host[2].wlan[0].mac  "throughput AC0"  ETV
+vector 243  Net80211_aodv.host[5].wlan[0].mac  "throughput AC0"  ETV
+vector 213  Net80211_aodv.host[0].wlan[0].mac  "throughput AC0"  ETV
+vector 231  Net80211_aodv.host[3].wlan[0].mac  "throughput AC0"  ETV
+vector 261  Net80211_aodv.host[8].wlan[0].mac  "throughput AC0"  ETV
+vector 219  Net80211_aodv.host[1].wlan[0].mac  "throughput AC0"  ETV
+vector 269  Net80211_aodv.host[9].wlan[0].radio  snirVector  ETV
+vector 199  Net80211_aodv.host[9].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 196  Net80211_aodv.host[9].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 239  Net80211_aodv.host[4].wlan[0].radio  snirVector  ETV
+vector 114  Net80211_aodv.host[4].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 111  Net80211_aodv.host[4].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 227  Net80211_aodv.host[2].wlan[0].radio  snirVector  ETV
+vector 80  Net80211_aodv.host[2].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 77  Net80211_aodv.host[2].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 245  Net80211_aodv.host[5].wlan[0].radio  snirVector  ETV
+vector 131  Net80211_aodv.host[5].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 128  Net80211_aodv.host[5].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 215  Net80211_aodv.host[0].wlan[0].radio  snirVector  ETV
+vector 46  Net80211_aodv.host[0].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 43  Net80211_aodv.host[0].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 233  Net80211_aodv.host[3].wlan[0].radio  snirVector  ETV
+vector 97  Net80211_aodv.host[3].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 94  Net80211_aodv.host[3].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 263  Net80211_aodv.host[8].wlan[0].radio  snirVector  ETV
+vector 182  Net80211_aodv.host[8].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 179  Net80211_aodv.host[8].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 221  Net80211_aodv.host[1].wlan[0].radio  snirVector  ETV
+vector 63  Net80211_aodv.host[1].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 60  Net80211_aodv.host[1].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 198  Net80211_aodv.host[9].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 197  Net80211_aodv.host[9].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 207  Net80211_aodv.fixhost[0].wlan[0].mac  "throughput AC0"  ETV
+vector 257  Net80211_aodv.host[7].wlan[0].radio  snirVector  ETV
+vector 165  Net80211_aodv.host[7].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 162  Net80211_aodv.host[7].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 209  Net80211_aodv.fixhost[0].wlan[0].radio  snirVector  ETV
+vector 19  Net80211_aodv.fixhost[0].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 16  Net80211_aodv.fixhost[0].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 113  Net80211_aodv.host[4].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 112  Net80211_aodv.host[4].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 249  Net80211_aodv.host[6].wlan[0].mac  "throughput AC0"  ETV
+vector 251  Net80211_aodv.host[6].wlan[0].radio  snirVector  ETV
+vector 148  Net80211_aodv.host[6].wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 145  Net80211_aodv.host[6].wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 18  Net80211_aodv.fixhost[0].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 17  Net80211_aodv.fixhost[0].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 96  Net80211_aodv.host[3].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 95  Net80211_aodv.host[3].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 130  Net80211_aodv.host[5].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 129  Net80211_aodv.host[5].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 62  Net80211_aodv.host[1].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 61  Net80211_aodv.host[1].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 79  Net80211_aodv.host[2].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 78  Net80211_aodv.host[2].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 45  Net80211_aodv.host[0].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 44  Net80211_aodv.host[0].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 181  Net80211_aodv.host[8].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 180  Net80211_aodv.host[8].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 147  Net80211_aodv.host[6].wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 146  Net80211_aodv.host[6].wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 118  Net80211_aodv.host[4].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 135  Net80211_aodv.host[5].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 67  Net80211_aodv.host[1].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 203  Net80211_aodv.host[9].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 101  Net80211_aodv.host[3].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 186  Net80211_aodv.host[8].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 84  Net80211_aodv.host[2].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 169  Net80211_aodv.host[7].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 24  Net80211_aodv.host[0].udpApp[0]  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 29  Net80211_aodv.host[0].udp  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 214  Net80211_aodv.host[0].wlan[0].mac  "Mac delay AC0"  ETV
+vector 3  Net80211_aodv.fixhost[0].udp  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 4  Net80211_aodv.fixhost[0].udp  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 0  Net80211_aodv.fixhost[0].udpApp[0]  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 1  Net80211_aodv.fixhost[0].udpApp[0]  endToEndDelay:vector  ETV
+attr interpolationmode  none
+attr source  messageAge(rcvdPk)
+attr title  "end-to-end delay, vector"
+attr unit  s
+vector 238  Net80211_aodv.host[4].wlan[0].mac  "Mac delay AC0"  ETV
+vector 23  Net80211_aodv.fixhost[0].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 152  Net80211_aodv.host[6].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 50  Net80211_aodv.host[0].wlan[0].radio  lossRate:vector  ETV
+attr interpolationmode  backward-sample-hold
+attr title  "packet loss rate, vector"
+vector 236  Net80211_aodv.host[4].wlan[0].mac  "jitter AC0"  ETV
+vector 212  Net80211_aodv.host[0].wlan[0].mac  "jitter AC0"  ETV
+0	24574 915 5801 16099 10.000986527052 10.097924527052 32 1500 1500 48000 72000000
+1	25489 1235 5801 16099 10.000986527052 10.097924527052 32 0.000923527052 0.003459263466 0.041475565761 6.1826752899308e-05
+3	26724 915 5800 16098 10.000986527052 10.097924527052 32 1508 1508 48256 72770048
+4	27639 842 5800 16098 10.000986527052 10.097924527052 32 1 32 528 11440
+14	28481 9 0 0 0 0 1 0 0 0 0
+16	28490 16853 159 80101 2.003080984097 75.250108992413 591 90 1570 119506 87790172
+17	45343 3818 290 78804 2.05548838334 73.993609052102 136 14 186 9592 1087840
+18	49161 2053 289 78803 2.05546038334 73.993581052102 72 90 186 8696 1075296
+19	51214 19692 159 80101 2.003080984097 75.250108992413 694 14 1570 121140 87816888
+20	70906 16 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+21	70922 9 0 0 0 0 1 0 0 0 0
+22	70931 44250 0 80100 0 75.250108992413 1661 0 2 966 1238
+23	115181 349 5908 74487 10.003283509018 69.226158165499 13 0 0 0 0
+24	115530 721 5522 15833 10 10.096875 32 1500 1500 48000 72000000
+29	116251 721 5535 15834 10 10.096875 32 1508 1508 48256 72770048
+41	116972 9 0 0 0 0 1 0 0 0 0
+43	116981 12399 63 80097 2.001034172865 75.250108836715 435 90 210 54194 7006284
+44	129380 3501 708 79515 2.148077966588 74.712398611207 128 20 1570 67826 96830772
+45	132881 2161 707 79514 2.148049966588 74.712370611207 82 90 1570 56056 79560872
+46	135042 16174 63 80097 2.001034172865 75.250108836715 570 14 1570 106068 85909800
+47	151216 16 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+48	151232 9 0 0 0 0 1 0 0 0 0
+49	151241 36911 0 80096 0 75.250108836715 1397 0 2 826 1082
+50	188152 303 6661 77184 10.010188736413 73.059804670032 11 0 0.08 0.12 0.0072
+58	188455 9 0 0 0 0 1 0 0 0 0
+60	188464 20292 75 80085 2.001034437091 75.250108732193 712 90 210 87928 11245440
+61	208756 2226 542 79813 2.132947560808 75.028423032687 78 90 186 9708 1252216
+62	210982 2226 541 79812 2.132919560808 75.028395032687 78 90 186 9708 1252216
+63	213208 25820 75 80085 2.001034437091 75.250108732193 911 14 1570 140698 90161500
+64	239028 16 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+65	239044 9 0 0 0 0 1 0 0 0 0
+66	239053 52772 0 80084 0 75.250108732193 1979 0 2 1067 1223
+67	291825 482 4461 78758 7.816348580729 73.949385142922 18 0 0 0 0
+75	292307 9 0 0 0 0 1 0 0 0 0
+77	292316 18843 55 80077 2.001033736431 75.250107967202 661 90 210 82314 10620820
+78	311159 1904 628 79890 2.142380941835 75.042052126104 67 90 194 8038 996428
+79	313063 1904 627 79889 2.142352941835 75.042024126104 67 90 194 8038 996428
+80	314967 24390 55 80077 2.001033736431 75.250107967202 860 14 1570 135084 89536880
+81	339357 16 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+82	339373 9 0 0 0 0 1 0 0 0 0
+83	339382 49447 0 80076 0 75.250107967202 1855 0 2 994 1128
+84	388829 456 5005 79010 9.301190501207 74.076926601775 17 0 0 0 0
+92	389285 9 0 0 0 0 1 0 0 0 0
+94	389294 19461 67 80093 2.001034239828 75.250108791282 683 90 210 84322 10784940
+95	408755 2369 364 78883 2.082844427497 74.032037531908 83 90 170 10174 1287660
+96	411124 2369 363 78882 2.082816427497 74.032009531908 83 90 170 10174 1287660
+97	413493 25501 67 80093 2.001034239828 75.250108791282 897 14 1570 198332 185851032
+98	438994 16 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+99	439010 9 0 0 0 0 1 0 0 0 0
+100	439019 54235 0 80092 0 75.250108791282 1961 0 2 1063 1229
+101	493254 484 4786 75391 8.652501704568 70.076474948085 17 0 0.1 0.22 0.014
+109	493738 10 0 0 0 0 1 0 0 0 0
+111	493748 22985 51 80073 2.001033646734 75.250107936426 779 90 1570 141910 90497932
+112	516733 6618 198 79151 2.045312347299 74.267078240057 227 14 1570 63522 80446156
+113	523351 3675 197 79150 2.045284347299 74.267050240057 124 90 1570 61888 80419440
+114	527026 26135 51 80073 2.001033646734 75.250107936426 889 14 1570 154576 107780376
+115	553161 17 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+116	553178 10 0 0 0 0 1 0 0 0 0
+117	553188 61721 0 80072 0 75.250107936426 2233 0 2 1343 1797
+118	614909 478 4234 76515 7.496286514649 72.559475286698 17 0 0.06 0.14 0.0068
+126	615387 66 0 30968 0 25.882154861764 3 0 1 1 1
+128	615453 21778 59 80081 2.001033863905 75.250108297237 739 90 210 90958 11585452
+129	637231 2916 450 79729 2.10231577285 75.015290460164 99 90 194 12234 1562444
+130	640147 2916 449 79728 2.10228777285 75.015262460164 99 90 194 12234 1562444
+131	643063 29839 59 80081 2.001033863905 75.250108297237 1017 14 1570 205864 186664088
+132	672902 17 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+133	672919 10 0 0 0 0 1 0 0 0 0
+134	672929 61679 0 80080 0 75.250108297237 2233 0 2 1215 1413
+135	734608 562 4398 78365 7.705386186308 73.494774817254 20 0 0.04 0.08 0.0024
+143	735170 10 0 0 0 0 1 0 0 0 0
+145	735180 14726 245 79848 2.045487729917 75.028634124632 499 90 202 62050 7991404
+146	749906 1827 860 78732 2.308100416035 73.949170050977 62 90 178 7284 880408
+147	751733 1827 859 78731 2.308072416035 73.949142050977 62 90 178 7284 880408
+148	753560 20499 245 79848 2.045487729917 75.028634124632 699 14 1570 114946 86923340
+149	774059 17 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+150	774076 10 0 0 0 0 1 0 0 0 0
+151	774086 42135 0 79847 0 75.028634124632 1523 0 2 823 947
+152	816221 374 6061 72903 10.003918728675 68.455852943105 13 0 0.06 0.12 0.0048
+160	816595 10 0 0 0 0 1 0 0 0 0
+162	816605 18511 127 80069 2.003079761681 75.250107769997 628 90 210 77712 9970864
+163	835116 2242 32 79982 2.000859085064 75.118104802757 76 90 190 9500 1221328
+164	837358 2243 31 79981 2.000831085064 75.118076802757 76 90 190 9500 1221328
+165	839601 24753 127 80069 2.003079761681 75.250107769997 842 14 1570 191722 185036956
+166	864354 17 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+167	864371 10 0 0 0 0 1 0 0 0 0
+168	864381 50756 0 80068 0 75.250107769997 1837 0 2 994 1146
+169	915137 452 5308 75367 9.503462214155 70.0764739268 16 0 0.02 0.06 0.0012
+177	915589 10 0 0 0 0 1 0 0 0 0
+179	915599 21052 71 80089 2.00103436511 75.250108766065 714 90 210 87920 11210632
+180	936651 2236 772 79245 2.257774303261 74.375450397108 76 90 198 9716 1287024
+181	938887 2236 771 79244 2.257746303261 74.375422397108 76 90 198 9716 1287024
+182	941123 26796 71 80089 2.00103436511 75.250108766065 913 14 1570 140690 90126692
+183	967919 17 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+184	967936 10 0 0 0 0 1 0 0 0 0
+185	967946 54747 0 80088 0 75.250108766065 1979 0 2 1065 1217
+186	1022693 500 4922 78746 8.974658903209 73.949384561414 18 0 0 0 0
+194	1023193 10 0 0 0 0 1 0 0 0 0
+196	1023203 20377 47 79997 2.001033316296 75.118311033989 691 90 202 85270 10875276
+197	1043580 2508 112 80054 2.002905530449 75.249897538765 85 90 210 10638 1392212
+198	1046088 2508 111 80053 2.002877530449 75.249869538765 85 90 210 10638 1392212
+199	1048596 28393 47 79997 2.001033316296 75.118311033989 969 14 1570 200176 185953912
+200	1076989 17 0 0 0 0 1 54000000 54000000 54000000 2.916e+15
+201	1077006 10 0 0 0 0 1 0 0 0 0
+202	1077016 58174 0 80067 0 75.250107538765 2109 0 2 1139 1309
+203	1135190 535 4721 77895 8.642487728432 73.258508666906 19 0 0.04 0.1 0.0028
+204	1135725 157956 0 80101 0 75.250108992413 5712 0 7 3494 16074
+205	1293681 91822 0 80100 0 75.250108992413 3322 0 2 1932 2476
+207	1385503 9027 122 80064 2.002906984097 75.249898992413 291 0 17759.690075916 472111.26927856 3886245333.2722
+209	1394530 39 158 158 2.003080984097 2.003080984097 1 20.172691878877 20.172691878877 20.172691878877 406.93749764011
+210	1394569 135690 0 80097 0 75.250108836715 4962 0 7 7072 32448
+211	1530259 76616 0 80096 0 75.250108836715 2794 0 2 1652 2164
+212	1606875 41 16157 16157 10.227593409093 10.227593409093 1 0.002301736414 0.002301736414 0.002301736414 5.2979905195336e-06
+213	1606916 7652 38 80063 2.000860172865 75.249898836715 251 0 1766033.8317358 2008117.4423205 3120378479623
+214	1614568 1291 5686 15985 10.000493736413 10.097368736413 32 0.000483736413 0.002785472827 0.022569265313 2.3145887705935e-05
+215	1615859 38 62 62 2.001034172865 2.001034172865 1 22.690884412793 22.690884412793 22.690884412793 514.87623543475
+216	1615897 189256 0 80085 0 75.250108732193 6840 0 5 2804 10600
+217	1805153 109502 0 80084 0 75.250108732193 3958 0 2 2134 2446
+219	1914655 10044 41 80060 2.000860437091 75.249898732193 326 0 29274.120854695 530698.02602476 5122635827.4983
+221	1924699 38 74 74 2.001034437091 2.001034437091 1 20.802166371493 20.802166371493 20.802166371493 432.73012574726
+222	1924737 176620 0 80077 0 75.250107967202 6386 0 5 2424 9140
+223	2101357 102604 0 80076 0 75.250107967202 3710 0 2 1988 2256
+225	2203961 9471 36 80058 2.000859736431 75.249897967202 308 0 14938.217816888 349734.20668654 2340366960.187
+227	2213432 38 54 54 2.001033736431 2.001033736431 1 27.145357982618 27.145357982618 27.145357982618 736.87046000447
+228	2213470 188850 0 80093 0 75.250108791282 6826 0 5 2984 11280
+229	2402320 108470 0 80092 0 75.250108791282 3922 0 2 2126 2458
+231	2510790 10202 39 80062 2.000860239828 75.249898791282 327 0 18037.617622508 503627.61428475 3815010264.0997
+233	2520992 38 66 66 2.001034239828 2.001034239828 1 22.172008609296 22.172008609296 22.172008609296 491.5979657707
+234	2521030 212088 0 80073 0 75.250107936426 7674 0 7 8658 40970
+235	2733118 123442 0 80072 0 75.250107936426 4466 0 2 2686 3594
+236	2856560 35 16154 16154 10.227592882962 10.227592882962 1 0.000279 0.000279 0.000279 7.7841e-08
+237	2856595 10659 35 80057 2.000859646734 75.249897936426 341 0 1766266.3520025 2363376.567359 3125356739680.5
+238	2867254 1297 5829 16127 10.001037601966 10.097975601966 32 0.000532299656 0.000811299656 0.021866588992 1.5134043035783e-05
+239	2868551 38 50 50 2.001033646734 2.001033646734 1 28.432247400693 28.432247400693 28.432247400693 808.39269225419
+240	2868589 214298 0 80081 0 75.250108297237 7760 0 5 3560 13460
+241	3082887 123358 0 80080 0 75.250108297237 4466 0 2 2430 2826
+243	3206245 10639 37 80059 2.000859863905 75.249898297237 340 0 27857.402103131 665439.34073625 7149875135.8609
+245	3216884 80 58 78452 2.001033863905 73.546460865785 2 25.592901656846 25.745817242045 51.338718898891 1317.8437206778
+246	3216964 147962 0 79848 0 75.028634124632 5348 0 5 2232 8432
+247	3364926 84270 0 79847 0 75.028634124632 3046 0 2 1646 1894
+249	3449196 8309 208 79738 2.045313729917 75.015291392527 269 0 20543.568231385 333362.90496295 2397557014.1653
+251	3457505 39 244 244 2.045487729917 2.045487729917 1 20.607832990785 20.607832990785 20.607832990785 424.68278057608
+252	3457544 176774 0 80069 0 75.250107769997 6398 0 5 2750 10366
+253	3634318 101512 0 80068 0 75.250107769997 3674 0 2 1988 2292
+255	3735830 9522 31 80056 2.000831085064 75.249897769997 307 0 18147.672041313 512449.36680463 4265181803.8526
+257	3745352 39 126 126 2.003079761681 2.003079761681 1 36.140894612859 36.140894612859 36.140894612859 1306.1642634178
+258	3745391 188608 0 80089 0 75.250108766065 6820 0 5 2728 10320
+259	3933999 109494 0 80088 0 75.250108766065 3958 0 2 2130 2434
+261	4043493 10005 40 80061 2.00086036511 75.249898766065 326 0 19608.72093165 490700.87144829 4461150106.8246
+263	4053498 37 70 70 2.00103436511 2.00103436511 1 21.277366167217 21.277366167217 21.277366167217 452.72631101384
+264	4053535 200958 0 80124 0 75.250198538765 7284 0 5 3064 11572
+265	4254493 116348 0 80067 0 75.250107538765 4218 0 2 2278 2618
+267	4370841 10019 34 80053 2.000859316296 75.249869538765 322 0 27551.352759047 510779.41423649 4641669074.0523
+269	4380860 38 46 46 2.001033316296 2.001033316296 1 36.140894612859 36.140894612859 36.140894612859 1306.1642634178

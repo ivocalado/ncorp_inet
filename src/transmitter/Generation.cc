@@ -13,58 +13,74 @@
 #include <sstream>
 #include "packets_m.h"
 #include "helper-functions.h"
-
+#include <functional>
 namespace ncorp {
 
-//template<class T> void print(matrix<T> &a) {
-//    for (size_t i = 0; i < a.size1(); i++) {
-//        cerr << "(";
-//        for (size_t j = 0; j < a.size2(); j++) {
-//            cerr << static_cast<int>(a(i, j))
-//                    << ((j == (a.size2() - 1)) ? "" : " ");
-//        }
-//        cerr << ")" << endl;
-//    }
-//}
-//
-//void print(Brx &brx, uint32_t nodeId) {
-//    int rows = brx.countRows();
-//    fprintf(stderr, "[Node = %d] rows = %d\n", nodeId, rows);
-//
-//    stringstream st;
-//    for (int j = 0; j < rows; j++) {
-//        std::vector<uint8_t> a = brx.getRow(j);
-//        int counter = brx.rowCounter(j);
-//        bool heard = brx.isRowHeard(j);
-//        st << "(";
-//        for (size_t i = 0; i < a.size(); i++) {
-//
-//            st << static_cast<int>(a[i])
-//                    << ((i == (a.size() - 1)) ? "" : " ");
-//        }
-//        st << ") " << counter << (heard ? " *****" : " NOT heard");
-//        fprintf(stderr, "[Node = %d] %s\n", nodeId, st.str().c_str());
-//    }
-//}
-//
-//void print(Btx &btx, uint32_t nodeId) {
-//    int rows = btx.countRows();
-//    cerr << "rows = " << rows << endl;
-//
-//    stringstream st;
-//    for (int j = 0; j < rows; j++) {
-//        std::vector<uint8_t> a = btx.getRow(j);
-//        bool heard = btx.isRowHeard(j);
-//        st << "(";
-//        for (size_t i = 0; i < a.size(); i++) {
-//
-//            st << static_cast<int>(a[i])
-//                    << ((i == (a.size() - 1)) ? "" : " ");
-//        }
-//        st << ") " << (heard ? " *****" : " NOT heard");
-//        fprintf(stderr, "[Node = %d] %s\n", nodeId, st.str().c_str());
-//    }
-//}
+template<class T> void print(matrix<T> &a) {
+    for (size_t i = 0; i < a.size1(); i++) {
+        cerr << "(";
+        for (size_t j = 0; j < a.size2(); j++) {
+            cerr << static_cast<int>(a(i, j))
+                    << ((j == (a.size2() - 1)) ? "" : " ");
+        }
+        cerr << ")" << endl;
+    }
+}
+
+template<class T> void print(std::vector<T> &v) {
+    stringstream st;
+    for(auto i = 0U; i < v.size(); i++) {
+        st<<static_cast<int>(v[i])<<((i == (v.size() - 1)) ? "" : " ");
+    }
+
+    fprintf(stderr, "Linha recebida: %s\n", st.str().c_str());
+}
+
+void print(Brx &brx) {
+    fprintf(stderr, "Status atual do BRX\n");
+    int rows = brx.countRows();
+    fprintf(stderr, "rows = %d\n", rows);
+
+
+    for (int j = 0; j < rows; j++) {
+        stringstream st;
+        std::vector<uint8_t> a = brx.getRow(j);
+        int counter = brx.rowCounter(j);
+        bool heard = brx.isRowHeard(j);
+        st << "(";
+        for (size_t i = 0; i < a.size(); i++) {
+
+            st << static_cast<int>(a[i])
+                    << ((i == (a.size() - 1)) ? "" : " ");
+        }
+        st << ") " << counter << (heard ? " *****\n" : " NOT heard\n");
+        fprintf(stderr, "%s", st.str().c_str());
+    }
+
+
+}
+
+void print(Btx &btx) {
+    fprintf(stderr, "Status atual do BTX\n");
+    int rows = btx.countRows();
+    cerr << "rows = " << rows << endl;
+
+
+    for (int j = 0; j < rows; j++) {
+        stringstream st;
+        std::vector<uint8_t> a = btx.getRow(j);
+        bool heard = btx.isRowHeard(j);
+        st << "(";
+        for (size_t i = 0; i < a.size(); i++) {
+
+            st << static_cast<int>(a[i])
+                    << ((i == (a.size() - 1)) ? "" : " ");
+        }
+        st << ") " << (heard ? " *****\n" : " NOT heard\n");
+        fprintf(stderr, "%s", st.str().c_str());
+    }
+
+}
 
 uint8_t rand_non_zero(uint8_t limit) {
     uint8_t result = rand() % limit;
@@ -100,6 +116,7 @@ Generation::Generation(uint32_t nId, uint16_t ident, Role rl, uint32_t sb,
                 packet_size), role(rl), timeout(0), payloadSize(pl) {
     decoder = decoder_factory.build();
     timeout = new cMessage("generation-timeout", GENERATION_TIMEOUT);
+    markNextPktAsInovative = false;
 }
 
 size_t Generation::getPayloadSize() const {
@@ -112,6 +129,8 @@ std::shared_ptr<std::vector<uint8_t> > Generation::getDecodedBlock() {
 }
 
 void Generation::pushAckCoding(std::vector<uint8_t> payload, uint32_t seed) {
+    fprintf(stderr, "Generation::pushAckCoding Begin\n");
+    print(payload);
     size_t m = 4; //Tamanho da matriz
     HashMatrices hash(m, generation_size, seed); //gera m matrizes 32 x 32 com base no seed especificado
     auto z = transpose(convert_to_matrix(payload));
@@ -130,13 +149,11 @@ void Generation::pushAckCoding(std::vector<uint8_t> payload, uint32_t seed) {
         }
 
         if (mark) {
-//            print(ebuffers.brx.getRow(i), nodeId);
             ebuffers.brx.markRowAsHeard(i);
-        } else {
-
         }
-
     }
+
+    print(ebuffers.brx);
 
     //Actions for Btx
     for (size_t i = 0; i < ebuffers.btx.countRows(); i++) {
@@ -152,12 +169,14 @@ void Generation::pushAckCoding(std::vector<uint8_t> payload, uint32_t seed) {
         }
 
         if (mark) {
-//            print(ebuffers.btx.getRow(i), nodeId);
             ebuffers.btx.markRowAsHeard(i);
         }
 
     }
 
+
+    print(ebuffers.btx);
+    fprintf(stderr, "Generation::pushAckCoding End\n");
 } //Manipula o vetor de codificação
 
 bool Generation::isComplete() {
@@ -206,6 +225,8 @@ Generation::~Generation() {
 
 void Generation::pushEncodedData(
         std::shared_ptr<std::vector<uint8_t> > payload) {
+    fprintf(stderr, "Generation::pushEncodedData Begin\n");
+
     auto info_decoder = info_decoder_factory.build();
     info_decoder->decode(&(*payload.get())[0]);
     if (info_decoder->cached_symbol_coded()) {
@@ -215,13 +236,14 @@ void Generation::pushEncodedData(
             coefficients.push_back(fifi::get_value<fifi::binary8>(c, i));
         }
 
-//        print(coefficients, nodeId);
+        print(coefficients);
 
         if (role == RECEIVER) {
             fprintf(stderr, "[Time = %f] Packet received!!\n", simTime().dbl());
         }
 
         if (ebuffers.bin.addRow(coefficients)) {
+            markNextPktAsInovative = true;
             if (role == RECEIVER)
                 fprintf(stderr, "Pacote inovativo!!\n");
             decoder->decode(&(*payload.get())[0]);
@@ -229,18 +251,23 @@ void Generation::pushEncodedData(
 
         //apos a recuperacao dos coeficientes, deve-se adicionado ao brx
         ebuffers.brx.addRow(coefficients);
-        printInfo();
+        print(ebuffers.brx);
     }
 
     if (isComplete() && role == RECEIVER) {
+        fprintf(stderr, "Geracao completa. Entregando dados à aplicação\n");
         data_out.reset(new std::vector<uint8_t>(decoder->block_size()));
         decoder->copy_symbols(sak::storage(*data_out.get()));
         data_out->erase(data_out->begin() + payloadSize, data_out->end());
     }
+
+    fprintf(stderr, "Generation::pushEncodedData End\n");
 }
-std::pair<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t>>>Generation::generateEncodedPacket() {
+
+std::tuple<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t> >, bool> Generation::generateEncodedPacket() {
     std::shared_ptr<std::vector<uint8_t> > payload;
     std::vector<uint8_t> coefficients;
+    bool isInovative;
     if (role == SENDER) {
         payload.reset(new std::vector<uint8_t>(encoder->payload_size()));
         encoder->encode(&(*payload.get())[0]); //Equivalente a &payload[0] de um vector<uint8_t>
@@ -256,7 +283,7 @@ std::pair<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t>>>Generation
             ebuffers.btx.addRow(coefficients);
 //            print(coefficients, nodeId);
         }
-
+        isInovative = true;
     } else {
 
         payload.reset(new std::vector<uint8_t>(decoder->payload_size()));
@@ -274,8 +301,11 @@ std::pair<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t>>>Generation
 
 //            print(coefficients, nodeId);
         }
+
+        isInovative = markNextPktAsInovative;
+        markNextPktAsInovative = false;
     }
-    return make_pair(coefficients, payload);
+    return std::make_tuple(coefficients, payload, isInovative);
 }
 
 std::vector<uint8_t> Generation::retrieveCurrentAckVector() {

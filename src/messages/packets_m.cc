@@ -1231,6 +1231,7 @@ CodedDataAck::CodedDataAck(const char *name, int kind) : NcorpPacket(name,kind)
     this->ackGenerationId_var = 0;
     this->useAck_var = 0;
     this->dbl_var = 0;
+    this->inovative_var = false;
 }
 
 CodedDataAck::CodedDataAck(const CodedDataAck& other) : NcorpPacket(other)
@@ -1265,6 +1266,7 @@ void CodedDataAck::copy(const CodedDataAck& other)
     this->encodingVector_var = other.encodingVector_var;
     this->payload_var = other.payload_var;
     this->payloadSize_var = other.payloadSize_var;
+    this->inovative_var = other.inovative_var;
 }
 
 void CodedDataAck::parsimPack(cCommBuffer *b)
@@ -1283,6 +1285,7 @@ void CodedDataAck::parsimPack(cCommBuffer *b)
     doPacking(b,this->encodingVector_var);
     doPacking(b,this->payload_var);
     doPacking(b,this->payloadSize_var);
+    doPacking(b,this->inovative_var);
 }
 
 void CodedDataAck::parsimUnpack(cCommBuffer *b)
@@ -1301,6 +1304,7 @@ void CodedDataAck::parsimUnpack(cCommBuffer *b)
     doUnpacking(b,this->encodingVector_var);
     doUnpacking(b,this->payload_var);
     doUnpacking(b,this->payloadSize_var);
+    doUnpacking(b,this->inovative_var);
 }
 
 IPv4Address& CodedDataAck::getFlowSrcAddr()
@@ -1433,6 +1437,16 @@ void CodedDataAck::setPayloadSize(const size_t& payloadSize)
     this->payloadSize_var = payloadSize;
 }
 
+bool CodedDataAck::isInovative() const
+{
+    return inovative_var;
+}
+
+void CodedDataAck::setInovative(bool inovative)
+{
+    this->inovative_var = inovative;
+}
+
 class CodedDataAckDescriptor : public cClassDescriptor
 {
   public:
@@ -1480,7 +1494,7 @@ const char *CodedDataAckDescriptor::getProperty(const char *propertyname) const
 int CodedDataAckDescriptor::getFieldCount(void *object) const
 {
     cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 13+basedesc->getFieldCount(object) : 13;
+    return basedesc ? 14+basedesc->getFieldCount(object) : 14;
 }
 
 unsigned int CodedDataAckDescriptor::getFieldTypeFlags(void *object, int field) const
@@ -1505,8 +1519,9 @@ unsigned int CodedDataAckDescriptor::getFieldTypeFlags(void *object, int field) 
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
         FD_ISCOMPOUND,
+        FD_ISEDITABLE,
     };
-    return (field>=0 && field<13) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<14) ? fieldTypeFlags[field] : 0;
 }
 
 const char *CodedDataAckDescriptor::getFieldName(void *object, int field) const
@@ -1531,8 +1546,9 @@ const char *CodedDataAckDescriptor::getFieldName(void *object, int field) const
         "encodingVector",
         "payload",
         "payloadSize",
+        "inovative",
     };
-    return (field>=0 && field<13) ? fieldNames[field] : NULL;
+    return (field>=0 && field<14) ? fieldNames[field] : NULL;
 }
 
 int CodedDataAckDescriptor::findField(void *object, const char *fieldName) const
@@ -1552,6 +1568,7 @@ int CodedDataAckDescriptor::findField(void *object, const char *fieldName) const
     if (fieldName[0]=='e' && strcmp(fieldName, "encodingVector")==0) return base+10;
     if (fieldName[0]=='p' && strcmp(fieldName, "payload")==0) return base+11;
     if (fieldName[0]=='p' && strcmp(fieldName, "payloadSize")==0) return base+12;
+    if (fieldName[0]=='i' && strcmp(fieldName, "inovative")==0) return base+13;
     return basedesc ? basedesc->findField(object, fieldName) : -1;
 }
 
@@ -1577,8 +1594,9 @@ const char *CodedDataAckDescriptor::getFieldTypeString(void *object, int field) 
         "EncodingVector",
         "Payload",
         "size_t",
+        "bool",
     };
-    return (field>=0 && field<13) ? fieldTypeStrings[field] : NULL;
+    return (field>=0 && field<14) ? fieldTypeStrings[field] : NULL;
 }
 
 const char *CodedDataAckDescriptor::getFieldProperty(void *object, int field, const char *propertyname) const
@@ -1592,6 +1610,9 @@ const char *CodedDataAckDescriptor::getFieldProperty(void *object, int field, co
     switch (field) {
         case 6:
             if (!strcmp(propertyname,"getter")) return "hasAck";
+            return NULL;
+        case 13:
+            if (!strcmp(propertyname,"getter")) return "isInovative";
             return NULL;
         default: return NULL;
     }
@@ -1634,6 +1655,7 @@ std::string CodedDataAckDescriptor::getFieldAsString(void *object, int field, in
         case 10: {std::stringstream out; out << pp->getEncodingVector(); return out.str();}
         case 11: {std::stringstream out; out << pp->getPayload(); return out.str();}
         case 12: {std::stringstream out; out << pp->getPayloadSize(); return out.str();}
+        case 13: return bool2string(pp->isInovative());
         default: return "";
     }
 }
@@ -1654,6 +1676,7 @@ bool CodedDataAckDescriptor::setFieldAsString(void *object, int field, int i, co
         case 5: pp->setAckGenerationId(string2ulong(value)); return true;
         case 6: pp->setUseAck(string2bool(value)); return true;
         case 7: pp->setDbl(string2double(value)); return true;
+        case 13: pp->setInovative(string2bool(value)); return true;
         default: return false;
     }
 }
@@ -1680,8 +1703,9 @@ const char *CodedDataAckDescriptor::getFieldStructName(void *object, int field) 
         "EncodingVector",
         "Payload",
         "size_t",
+        NULL,
     };
-    return (field>=0 && field<13) ? fieldStructNames[field] : NULL;
+    return (field>=0 && field<14) ? fieldStructNames[field] : NULL;
 }
 
 void *CodedDataAckDescriptor::getFieldStructPointer(void *object, int field, int i) const

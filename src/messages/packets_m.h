@@ -285,6 +285,7 @@ inline void doUnpacking(cCommBuffer *b, CodedEAck& obj) {obj.parsimUnpack(b);}
  *     
  *     Payload payload;
  *     size_t payloadSize;
+ *     bool inovative @getter(isInovative) = false;
  * }
  * </pre>
  */
@@ -304,6 +305,7 @@ class CodedDataAck : public ::NcorpPacket
     EncodingVector encodingVector_var;
     Payload payload_var;
     size_t payloadSize_var;
+    bool inovative_var;
 
   private:
     void copy(const CodedDataAck& other);
@@ -355,6 +357,8 @@ class CodedDataAck : public ::NcorpPacket
     virtual size_t& getPayloadSize();
     virtual const size_t& getPayloadSize() const {return const_cast<CodedDataAck*>(this)->getPayloadSize();}
     virtual void setPayloadSize(const size_t& payloadSize);
+    virtual bool isInovative() const;
+    virtual void setInovative(bool inovative);
 };
 
 inline void doPacking(cCommBuffer *b, CodedDataAck& obj) {obj.parsimPack(b);}

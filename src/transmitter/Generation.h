@@ -30,6 +30,7 @@
 #include "messagecodes.h"
 #include <utility>
 #include <omnetpp.h>
+#include <tuple>
 namespace kodo {
 
 /// @brief The symbol info stack defined below can be used to split an
@@ -156,7 +157,7 @@ public:
      * pair<coefficients, payload>
      * @return the encoded packet
      */
-    std::pair<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t> > > generateEncodedPacket();
+    std::tuple<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t> >, bool> generateEncodedPacket();
 
     /**
      * @brief Retrieve the ack vector based on the current decoder payload
@@ -227,6 +228,7 @@ protected:
 
         return id < x.id;
     }
+    bool markNextPktAsInovative;
 
 };
 

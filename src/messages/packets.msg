@@ -111,5 +111,6 @@ packet CodedDataAck extends NcorpPacket
     //repassado diretamente no objeto payload 
     Payload payload;
     size_t payloadSize;
+    bool inovative @getter(isInovative) = false;
 }
 

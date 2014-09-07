@@ -33,6 +33,7 @@
 #include "CcackBaseline.h"
 
 class ETXMetric;
+class Ieee80211Mac;
 
 /**
  * UDP application. See NED for more info.
@@ -78,6 +79,8 @@ class INET_API Ncorp : public AppBase
     void deliverReceivedBlock(uint16_t flowId, IPv4Address from, std::shared_ptr<std::vector<uint8_t> > block);
     void askForChannelOpportunity();
 
+    Ieee80211Mac* macModule;
+
 
   public:
     std::list<IPv4Address> findCandidateSet(IPv4Address target);//Retorna o conjunto de candidatos baseados na localização geográfica dos nos
@@ -86,6 +89,7 @@ class INET_API Ncorp : public AppBase
 
     void scheduleTimer(simtime_t when, cMessage* msg);
     IPv4Address getMyNetAddr() const;
+    string getMyNodeName();
     Coord getCurrentPosition();
     double getTransmissionTime();//Calcula o tempo médio trnamissão de um pacote de um nó vizinho para o atual
     void sendToIp(cPacket* pkt, IPv4Address dst);
