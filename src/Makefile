@@ -194,6 +194,8 @@ $O/Ncorp.o: Ncorp.cc \
 	Ncorp.h \
 	etx/ETXMetric.h \
 	handler/EventHandler.h \
+	helper/constants.h \
+	helper/helper-functions.h \
 	messagecodes.h \
 	messages/PacketSizeConfigurator.h \
 	messages/packets_m.h \
@@ -250,6 +252,7 @@ $O/Ncorp.o: Ncorp.cc \
 $O/etx/ETXMetric.o: etx/ETXMetric.cc \
 	etx/ETXMetric.h \
 	handler/EventHandler.h \
+	helper/constants.h \
 	helper/helper-functions.h \
 	messages/packets_m.h \
 	$(INETMANET_2_0_PROJ)/src/base/Coord.h \
@@ -280,6 +283,7 @@ $O/handler/EventHandler.o: handler/EventHandler.cc \
 	$(INETMANET_2_0_PROJ)/src/transport/contract/UDPSocket.h \
 	$(INETMANET_2_0_PROJ)/src/util/FWMath.h
 $O/helper/helper-functions-impl.o: helper/helper-functions-impl.cc \
+	helper/constants.h \
 	helper/helper-functions.h
 $O/messages/packets_m.o: messages/packets_m.cc \
 	messages/packets_m.h \
@@ -294,6 +298,8 @@ $O/transmitter/Binary8MatrixHelpers.o: transmitter/Binary8MatrixHelpers.cc \
 	transmitter/Binary8MatrixHelpers.h
 $O/transmitter/CcackBaseline.o: transmitter/CcackBaseline.cc \
 	Ncorp.h \
+	helper/constants.h \
+	helper/helper-functions.h \
 	messagecodes.h \
 	messages/packets_m.h \
 	transmitter/Binary8Arithmetic.h \
@@ -316,6 +322,8 @@ $O/transmitter/DiagonalRandomMatrix.o: transmitter/DiagonalRandomMatrix.cc \
 	transmitter/DiagonalRandomMatrix.h
 $O/transmitter/Flow.o: transmitter/Flow.cc \
 	Ncorp.h \
+	helper/constants.h \
+	helper/helper-functions.h \
 	messagecodes.h \
 	messages/packets_m.h \
 	transmitter/Binary8Arithmetic.h \
@@ -335,6 +343,7 @@ $O/transmitter/Flow.o: transmitter/Flow.cc \
 	$(INETMANET_2_0_PROJ)/src/transport/contract/UDPSocket.h \
 	$(INETMANET_2_0_PROJ)/src/util/FWMath.h
 $O/transmitter/Generation.o: transmitter/Generation.cc \
+	helper/constants.h \
 	helper/helper-functions.h \
 	messagecodes.h \
 	messages/packets_m.h \

@@ -115,6 +115,8 @@ simple Ncorp like IUDPApp
 		xml ETXInputFileName = xmldoc("etx.config.xml", "/etx_table");
 		bool ETXUseConfigFile = default(true);
         bool ETXDisableEvents = default(false); //Se verdadeiro, desabilita os eventos
+        double ETXReliabilityFactor = default(0.0); //Define o nivel de congiabilidade requerido para escolha do forwardcandidate set. 
+        //O valor default seleciona todos os nos possiveis. Valores fora do intervalo [0,1] geram um erro  
         
         string destAddress = default(""); // Se vazio, indica que o nó não deve transmitir
         int flowId = default(-1); //Se -1 gera randomicamente
@@ -125,6 +127,7 @@ simple Ncorp like IUDPApp
         int CCACKGenerationSize = default(32); //Define o tamanho da geração em número de pacotes
         int CCACKPayloadSize @unit (B) = default(1500 B);
         double CCACKFlowTimeout @unit(s) = default(300 s);
+        
         
         @signal[sentPk](type=cPacket);
         @signal[rcvdPk](type=cPacket);

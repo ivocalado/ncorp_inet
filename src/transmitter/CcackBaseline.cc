@@ -12,6 +12,7 @@
 #include <utility>
 #include "messagecodes.h"
 #include "Ncorp.h"
+#include "helper-functions.h"
 
 namespace ncorp {
 
@@ -80,7 +81,7 @@ IPv4Address CcackBaseline::handleEAckPkt(CodedEAck* packet) {
 NcorpPacket* CcackBaseline::handleCodedDataAtDownstream(CodedDataAck* packet,
         IPv4Address from, simtime_t now) {
 
-    fprintf(stderr, "CcackBaseline::handleCodedDataAtDownstream Begin\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::handleCodedDataAtDownstream Begin\n");
     handleNewDblValue(from, packet->getDbl(), now); //Atualiza o valor do dbl do nó
 
     auto flowId = packet->getFlowId();
@@ -99,7 +100,7 @@ NcorpPacket* CcackBaseline::handleCodedDataAtDownstream(CodedDataAck* packet,
                 codedPacket, packet->getPayloadSize()); //Se o fluxo existir, chama o manipulador
         (*flow)->printInfo();
     } else {
-        fprintf(stderr, "Criando novo fluxo\n");
+        debugprintf(stderr, LOG_LEVEL_2, "Criando novo fluxo\n");
         std::shared_ptr<ncorp::Flow> newFlow(
                 new Flow(mainNcorp, myNetAddr, packet->getFlowId(),
                         packet->getFlowSrcAddr(), packet->getFlowDstAddr(),
@@ -113,13 +114,13 @@ NcorpPacket* CcackBaseline::handleCodedDataAtDownstream(CodedDataAck* packet,
     }
     delete packet; //Delete unnecessary packets
 
-    fprintf(stderr, "CcackBaseline::handleCodedDataAtDownstream End\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::handleCodedDataAtDownstream End\n");
     return result;
 }
 
 void CcackBaseline::handleCodedDataAtUpstream(CodedDataAck* packet,
         IPv4Address from, simtime_t now) {
-    fprintf(stderr, "CcackBaseline::handleCodedDataAtUpstream Begin\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::handleCodedDataAtUpstream Begin\n");
     handleNewDblValue(from, packet->getDbl(), now); //Atualiza o valor do dbl do nó
 
     auto flowId = packet->getFlowId();
@@ -138,7 +139,7 @@ void CcackBaseline::handleCodedDataAtUpstream(CodedDataAck* packet,
         (*flow)->printInfo();
     }
 
-    fprintf(stderr, "CcackBaseline::handleCodedDataAtUpstream End\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::handleCodedDataAtUpstream End\n");
     delete packet;
 }
 
@@ -209,8 +210,8 @@ CodedDataAck* CcackBaseline::replacePacket(uint16_t flowId) {
  * Retorna o próximo pacote a ser transmitido entre todos os fluxos ou NULL
  */
 CodedDataAck* CcackBaseline::nextPacketToTransmit() {
-    fprintf(stderr, "CcackBaseline::nextPacketToTransmit Begin\n");
-    fprintf(stderr, "Selecionando fluxo para transmissao\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::nextPacketToTransmit Begin\n");
+    debugprintf(stderr, LOG_LEVEL_2, "Selecionando fluxo para transmissao\n");
     auto flow = nextFlowToTransmit();
 
     CodedDataAck* packet = flow ? flow->generateNewPacket() : NULL;
@@ -222,15 +223,15 @@ CodedDataAck* CcackBaseline::nextPacketToTransmit() {
                 });
         packet->setDbl(dbl);
         packet->setForwardSet(mainNcorp->findCandidateSet(packet->getFlowDstAddr()));
-        fprintf(stderr, "Pacote retornado!\n");
+        debugprintf(stderr, LOG_LEVEL_2, "Pacote retornado!\n");
     } else {
-        fprintf(stderr, "NÃO ha pacote a ser transmitido!\n");
+        debugprintf(stderr, LOG_LEVEL_2, "NÃO ha pacote a ser transmitido!\n");
     }
 
     if (flow)
         flow->printInfo();
 
-    fprintf(stderr, "CcackBaseline::nextPacketToTransmit End\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::nextPacketToTransmit End\n");
     return packet;
 }
 
@@ -244,7 +245,7 @@ void CcackBaseline::retrieveDecodedBlock(uint16_t& flowId,
 }
 
 std::shared_ptr<ncorp::Flow> CcackBaseline::nextFlowToTransmit() {
-    fprintf(stderr, "CcackBaseline::nextFlowToTransmit Begin\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::nextFlowToTransmit Begin\n");
     double deltaN = 0;
     if (flows.empty())
         return std::shared_ptr<ncorp::Flow>();
@@ -264,7 +265,7 @@ std::shared_ptr<ncorp::Flow> CcackBaseline::nextFlowToTransmit() {
 
     std::for_each(neighboursToRemove.begin(), neighboursToRemove.end(), [this](IPv4Address addr){
         neighboursDbl.erase(addr);
-//            fprintf(stderr,
+//            debugprintf(stderr,
 //                    "[Node = %s] CcackBaseline::REMOCAO -- Vizinho removido: %s\n", mainNcorp->getMyNetAddr().str(true).c_str(), addr.str(true).c_str());
 
     });
@@ -292,12 +293,12 @@ std::shared_ptr<ncorp::Flow> CcackBaseline::nextFlowToTransmit() {
 
     auto result = std::shared_ptr<ncorp::Flow>();
     if(flows.end() == flow) {
-        fprintf(stderr, "Nenhum fluxo selecionado!\n");
+        debugprintf(stderr, LOG_LEVEL_2, "Nenhum fluxo selecionado!\n");
     } else {
-        fprintf(stderr, "Fluxo selecionado!\n");
+        debugprintf(stderr, LOG_LEVEL_2, "Fluxo selecionado!\n");
         result = *flow;
     }
-    fprintf(stderr, "CcackBaseline::nextFlowToTransmit End\n");
+    debugprintf(stderr, LOG_LEVEL_2, "CcackBaseline::nextFlowToTransmit End\n");
     return result;
 }
 

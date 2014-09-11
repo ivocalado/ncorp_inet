@@ -33,13 +33,13 @@ template<class T> void print(std::vector<T> &v) {
         st<<static_cast<int>(v[i])<<((i == (v.size() - 1)) ? "" : " ");
     }
 
-    fprintf(stderr, "Linha recebida: %s\n", st.str().c_str());
+    debugprintf(stderr, LOG_LEVEL_4, "Linha recebida: %s\n", st.str().c_str());
 }
 
 void print(Brx &brx) {
-    fprintf(stderr, "Status atual do BRX\n");
+    debugprintf(stderr, LOG_LEVEL_4, "Status atual do BRX\n");
     int rows = brx.countRows();
-    fprintf(stderr, "rows = %d\n", rows);
+    debugprintf(stderr, LOG_LEVEL_4, "rows = %d\n", rows);
 
 
     for (int j = 0; j < rows; j++) {
@@ -54,16 +54,16 @@ void print(Brx &brx) {
                     << ((i == (a.size() - 1)) ? "" : " ");
         }
         st << ") " << counter << (heard ? " *****\n" : " NOT heard\n");
-        fprintf(stderr, "%s", st.str().c_str());
+        debugprintf(stderr, LOG_LEVEL_4, "%s", st.str().c_str());
     }
 
 
 }
 
 void print(Btx &btx) {
-    fprintf(stderr, "Status atual do BTX\n");
+    debugprintf(stderr, LOG_LEVEL_4, "Status atual do BTX\n");
     int rows = btx.countRows();
-    cerr << "rows = " << rows << endl;
+    debugprintf(stderr, LOG_LEVEL_4, "rows = %d\n", rows);
 
 
     for (int j = 0; j < rows; j++) {
@@ -77,7 +77,7 @@ void print(Btx &btx) {
                     << ((i == (a.size() - 1)) ? "" : " ");
         }
         st << ") " << (heard ? " *****\n" : " NOT heard\n");
-        fprintf(stderr, "%s", st.str().c_str());
+        debugprintf(stderr, LOG_LEVEL_4, "%s", st.str().c_str());
     }
 
 }
@@ -129,7 +129,7 @@ std::shared_ptr<std::vector<uint8_t> > Generation::getDecodedBlock() {
 }
 
 void Generation::pushAckCoding(std::vector<uint8_t> payload, uint32_t seed) {
-    fprintf(stderr, "Generation::pushAckCoding Begin\n");
+    debugprintf(stderr, LOG_LEVEL_4, "Generation::pushAckCoding Begin\n");
     print(payload);
     size_t m = 4; //Tamanho da matriz
     HashMatrices hash(m, generation_size, seed); //gera m matrizes 32 x 32 com base no seed especificado
@@ -176,7 +176,7 @@ void Generation::pushAckCoding(std::vector<uint8_t> payload, uint32_t seed) {
 
 
     print(ebuffers.btx);
-    fprintf(stderr, "Generation::pushAckCoding End\n");
+    debugprintf(stderr, LOG_LEVEL_4, "Generation::pushAckCoding End\n");
 } //Manipula o vetor de codificação
 
 bool Generation::isComplete() {
@@ -225,7 +225,7 @@ Generation::~Generation() {
 
 void Generation::pushEncodedData(
         std::shared_ptr<std::vector<uint8_t> > payload) {
-    fprintf(stderr, "Generation::pushEncodedData Begin\n");
+    debugprintf(stderr, LOG_LEVEL_4, "Generation::pushEncodedData Begin\n");
 
     auto info_decoder = info_decoder_factory.build();
     info_decoder->decode(&(*payload.get())[0]);
@@ -239,13 +239,13 @@ void Generation::pushEncodedData(
         print(coefficients);
 
         if (role == RECEIVER) {
-            fprintf(stderr, "[Time = %f] Packet received!!\n", simTime().dbl());
+            debugprintf(stderr, LOG_LEVEL_4, "[Time = %f] Packet received!!\n", simTime().dbl());
         }
 
         if (ebuffers.bin.addRow(coefficients)) {
             markNextPktAsInovative = true;
             if (role == RECEIVER)
-                fprintf(stderr, "Pacote inovativo!!\n");
+                fprintf(stderr, "[Time = %f] Pacote inovativo!!\n", simTime().dbl());
             decoder->decode(&(*payload.get())[0]);
         }
 
@@ -255,13 +255,13 @@ void Generation::pushEncodedData(
     }
 
     if (isComplete() && role == RECEIVER) {
-        fprintf(stderr, "Geracao completa. Entregando dados à aplicação\n");
+        debugprintf(stderr, LOG_LEVEL_4, "Geracao completa. Entregando dados à aplicação\n");
         data_out.reset(new std::vector<uint8_t>(decoder->block_size()));
         decoder->copy_symbols(sak::storage(*data_out.get()));
         data_out->erase(data_out->begin() + payloadSize, data_out->end());
     }
 
-    fprintf(stderr, "Generation::pushEncodedData End\n");
+    debugprintf(stderr, LOG_LEVEL_4, "Generation::pushEncodedData End\n");
 }
 
 std::tuple<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t> >, bool> Generation::generateEncodedPacket() {

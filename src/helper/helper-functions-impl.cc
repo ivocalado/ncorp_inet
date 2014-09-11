@@ -6,7 +6,9 @@
  */
 
 #include "helper-functions.h"
-
+#include <stdio.h>
+#include <stdarg.h>
+#include "constants.h"
 
 void print(std::vector<uint8_t> v,uint32_t nodeId) {
     stringstream st;
@@ -16,4 +18,16 @@ void print(std::vector<uint8_t> v,uint32_t nodeId) {
     }
     st << ")";
     fprintf(stderr, "[Node = %d] %s\n", nodeId, st.str().c_str());
+}
+
+int debugprintf(FILE* out, LogLevel level, const char* format, ...) {
+
+    if(CURRENT_LOG_LEVEL && level <= CURRENT_LOG_LEVEL) {
+        va_list list;
+        va_start(list, format);
+        int result = vfprintf(out, format, list);
+        va_end(list);
+        return result;
+    } else
+        return 0;
 }

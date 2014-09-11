@@ -35,8 +35,8 @@
 #include <iostream>
 #include "PacketSizeConfigurator.h"
 #include "Ieee80211Mac.h"
-
-#define DROP_MAC_PKT 0
+#include "constants.h"
+#include "helper-functions.h"
 
 using namespace std;
 
@@ -117,10 +117,9 @@ bool Ncorp::startApp(IDoneCallback *doneCallback) {
         throw cRuntimeError(this, "Uma interface válida DEVE ser informada");
     }
 
-    fprintf(stderr, "Host: %s (%s) conectado na porta: %d\n",
+    debugprintf(stderr, LOG_LEVEL_1, "Host: %s (%s) conectado na porta: %d\n",
             getMyNetAddr().str(true).c_str(), getMyNodeName().c_str(),
             connectionPort);
-
     metric = new ETXMetric;
     metric->setMainModule(this);
     ccackBaseline.reset(new ncorp::CcackBaseline(this));
@@ -169,7 +168,7 @@ void Ncorp::sendToIp(cPacket *pk, IPv4Address destAddr) {
 }
 
 void Ncorp::handleLowerMsg(cMessage *pk) {
-    fprintf(stderr, "(%s) Ncorp::handleLowerMsg Begin\n",
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleLowerMsg Begin\n",
             getMyNodeName().c_str());
     auto pkt = PK(pk);
     auto from =
@@ -177,9 +176,8 @@ void Ncorp::handleLowerMsg(cMessage *pk) {
 
     auto host = IPvXAddressResolver().findHostWithAddress(from);
 
-    fprintf(stderr, "Received from %s[%d]\n", host->getName(),
+    debugprintf(stderr, LOG_LEVEL_1, "Received from %s[%d]\n", host->getName(),
             host->getIndex());
-
     auto ncorpPkt = check_and_cast<NcorpPacket*>(pkt);
     switch (ncorpPkt->getType()) {
     // Just to make sure it is the beacon message we sent
@@ -209,7 +207,7 @@ void Ncorp::handleLowerMsg(cMessage *pk) {
     }
     }
     askForChannelOpportunity();
-    fprintf(stderr, "(%s) Ncorp::handleLowerMsg End\n\n",
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleLowerMsg End\n\n",
             getMyNodeName().c_str());
 }
 
@@ -241,14 +239,13 @@ void Ncorp::handleSelfMsg(cMessage* msg) {
         } else {
             ccackBaseline->pushRawBlock(getMyNetAddr(), dst, flowId, data_in);
         }
-        fprintf(stderr, "%s <=> %s\n", getMyNetAddr().str(true).c_str(),
+        debugprintf(stderr, LOG_LEVEL_1, "%s <=> %s\n", getMyNetAddr().str(true).c_str(),
                 dst.str(true).c_str());
-
         askForChannelOpportunity();
     }
         break;
     case GENERATION_TIMEOUT: {
-//        fprintf(stderr, "\n[Node = %lu] [Time = %f] GENERATION_TIMEOUT\n", myNetwAddr, simTime().dbl());
+//        debugprintf(stderr, "\n[Node = %lu] [Time = %f] GENERATION_TIMEOUT\n", myNetwAddr, simTime().dbl());
         auto flow = (ncorp::Flow*) msg->getContextPointer();
         flow->processTimer(msg);
     }
@@ -264,8 +261,7 @@ bool Ncorp::isUpstream(IPv4Address relay, IPv4Address target) {
 }
 
 void Ncorp::handleEAckPkt(CodedEAck* packet) {
-
-    fprintf(stderr, "(%s) Ncorp::handleEAckPkt Begin\n",
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleEAckPkt Begin\n",
             getMyNodeName().c_str());
     auto currentDestination = packet->getNextHopAddr();
     auto flowId = packet->getFlowId();
@@ -273,7 +269,8 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
 
 #if DROP_MAC_PKT
     auto transmissionQueue = macModule->transmissionQueue();
-    fprintf(stderr, "(%s) Iniciando remocao de pacotes antigos\n",
+
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Iniciando remocao de pacotes antigos\n",
             getMyNodeName().c_str());
 
     transmissionQueue->remove_if(
@@ -286,7 +283,7 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
                             case CODED_ACK: {
                                 auto codedAck = check_and_cast<CodedAck*>(appPkt);
                                 if(codedAck->getFlowId() == flowId && codedAck->getAckGenerationId() < generationId) {
-                                    fprintf(stderr, "(%s) Deletando pacote CODED_ACK\n", getMyNodeName().c_str());
+                                    debugprintf(stderr, LOG_LEVEL_1, "(%s) Deletando pacote CODED_ACK\n", getMyNodeName().c_str());
                                     delete frame;
                                     return true;
                                 }
@@ -295,7 +292,8 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
                             case CODED_DATA_ACK: {
                                 auto codedDataAck = check_and_cast<CodedDataAck*>(appPkt);
                                 if(codedDataAck->getFlowId() == flowId && codedDataAck->getGenerationId() < generationId) {
-                                    fprintf(stderr, "(%s) Deletando pacote CODED_DATA_ACK\n", getMyNodeName().c_str());
+                                    debugprintf(stderr, LOG_LEVEL_1, "(%s) Deletando pacote CODED_DATA_ACK\n", getMyNodeName().c_str());
+
                                     delete frame;
                                     return true;
                                 }
@@ -304,7 +302,7 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
                             case CODED_EACK: {
                                 auto eack = check_and_cast<CodedEAck*>(appPkt);
                                 if(eack->getFlowId() == flowId && eack->getGenerationId() <= generationId) {
-                                    fprintf(stderr, "(%s) Deletando pacote CODED_EACK\n", getMyNodeName().c_str());
+                                    debugprintf(stderr, LOG_LEVEL_1, "(%s) Deletando pacote CODED_EACK\n", getMyNodeName().c_str());
                                     delete frame;
                                     return true;
                                 }
@@ -314,7 +312,7 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
                         }
                     }
                 } else {
-                    fprintf(stderr, "(%s) Pacote atual esta sendo transmitido\n", getMyNodeName().c_str());
+                    debugprintf(stderr, LOG_LEVEL_1, "(%s) Pacote atual esta sendo transmitido\n", getMyNodeName().c_str());
                 }
                 return false;
             });
@@ -324,7 +322,7 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
     auto destination = ccackBaseline->handleEAckPkt(packet);
     if (currentDestination == getMyNetAddr()
             && destination != IPv4Address::UNSPECIFIED_ADDRESS) {
-        fprintf(stderr, "(%s) Reenviando pacote EACK\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Reenviando pacote EACK\n",
                 getMyNodeName().c_str());
         auto nextHop = metric->findBestNeighbourTo(destination);
         auto eackPacket = new CodedEAck();
@@ -335,40 +333,35 @@ void Ncorp::handleEAckPkt(CodedEAck* packet) {
 
         sendToIp(eackPacket, IPv4Address::ALLONES_ADDRESS);
     } else {
-        fprintf(stderr, "(%s) Interrompendo o fluxo\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Interrompendo o fluxo\n",
                 getMyNodeName().c_str());
     }
-
-    fprintf(stderr, "(%s) Ncorp::handleEAckPkt End\n", getMyNodeName().c_str());
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleEAckPkt End\n", getMyNodeName().c_str());
 }
 
 void Ncorp::handleCodedAckPkt(CodedAck* packet, IPv4Address relay) {
-
-    fprintf(stderr, "(%s) handleCodedAckPkt Begin\n", getMyNodeName().c_str());
-
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) handleCodedAckPkt Begin\n", getMyNodeName().c_str());
     auto flowId = packet->getFlowId();
 
     if (!ccackBaseline->hasFlow(flowId)) {
         delete packet;
-        fprintf(stderr, "(%s) O fluxo nao esta presente\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) O fluxo nao esta presente\n",
                 getMyNodeName().c_str());
-        fprintf(stderr, "(%s) handleCodedAckPkt End\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) handleCodedAckPkt End\n",
                 getMyNodeName().c_str());
         return;
     }
 
     auto destination = ccackBaseline->getDestByFlow(flowId);
     if (relay == destination || isUpstream(relay, destination)) {
-
-        fprintf(stderr, "(%s) Repassando para o ccack\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Repassando para o ccack\n",
                 getMyNodeName().c_str());
         auto generationId = packet->getAckGenerationId();
 
         ccackBaseline->handleCodedAckAtUpstream(packet, relay);
 
 #if DROP_MAC_PKT
-
-        fprintf(stderr, "(%s) Iniciando remocao de pacotes antigos\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Iniciando remocao de pacotes antigos\n",
                 getMyNodeName().c_str());
         auto transmissionQueue = macModule->transmissionQueue();
         transmissionQueue->remove_if(
@@ -377,7 +370,7 @@ void Ncorp::handleCodedAckPkt(CodedAck* packet, IPv4Address relay) {
                         auto appPkt = dynamic_cast<CodedDataAck*>(extractPkt(frame));
                         if(appPkt) {
                             if(appPkt->getFlowId() == flowId && appPkt->getGenerationId() == generationId) {
-                                fprintf(stderr, "(%s) deletando pacote antigo\n", getMyNodeName().c_str());
+                                debugprintf(stderr, LOG_LEVEL_1, "(%s) deletando pacote antigo\n", getMyNodeName().c_str());
                                 delete frame;
                                 return true;
                             }
@@ -388,27 +381,27 @@ void Ncorp::handleCodedAckPkt(CodedAck* packet, IPv4Address relay) {
 
         auto packetToSend = ccackBaseline->replacePacket(flowId);
         if (packetToSend) {
-            fprintf(stderr, "(%s) Substituindo por novo pacote\n",
+            debugprintf(stderr, LOG_LEVEL_1, "(%s) Substituindo por novo pacote\n",
                     getMyNodeName().c_str());
             sendToIp(packetToSend, IPv4Address::ALLONES_ADDRESS);
         } else {
-            fprintf(stderr, "(%s) Nao ha pacote para substituir\n",
+            debugprintf(stderr, LOG_LEVEL_1, "(%s) Nao ha pacote para substituir\n",
                     getMyNodeName().c_str());
         }
 #endif
 
     } else {
-        fprintf(stderr,
+        debugprintf(stderr, LOG_LEVEL_1,
                 "(%s) O no atual eh um downstream. Nao ha o que fazer com o pacote\n",
                 getMyNodeName().c_str());
         delete packet;
     }
-    fprintf(stderr, "(%s) handleCodedAckPkt End\n", getMyNodeName().c_str());
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) handleCodedAckPkt End\n", getMyNodeName().c_str());
 }
 
 simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
         IPv4Address relay) {
-    fprintf(stderr, "(%s) Ncorp::handleCodedDataAckPkt Begin\n",
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleCodedDataAckPkt Begin\n",
             getMyNodeName().c_str());
     simtime_t delay = SIMTIME_ZERO;
 
@@ -420,19 +413,18 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
 
     if (to == getMyNetAddr()
             || std::find(fs.begin(), fs.end(), getMyNetAddr()) != fs.end()) {
-        fprintf(stderr, "(%s) Invocando handleCodedDataAtDownstream\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Invocando handleCodedDataAtDownstream\n",
                 getMyNodeName().c_str());
         result = ccackBaseline->handleCodedDataAtDownstream(packet, relay,
                 simTime());
         packet = NULL;
     } else if (upstream) {
 
-        fprintf(stderr, "(%s) Invocando handleCodedDataAtUpstream\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Invocando handleCodedDataAtUpstream\n",
                 getMyNodeName().c_str());
 
         auto flowId = packet->getFlowId();
         auto generationId = packet->getGenerationId();
-
 
         ccackBaseline->handleCodedDataAtUpstream(packet, relay, simTime());
 
@@ -440,7 +432,7 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
 
         auto transmissionQueue = macModule->transmissionQueue();
 
-        fprintf(stderr, "(%s) Iniciando processo de delecao de pacotes\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Iniciando processo de delecao de pacotes\n",
                 getMyNodeName().c_str());
 
         transmissionQueue->remove_if(
@@ -449,42 +441,38 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
                         auto appPkt = dynamic_cast<CodedDataAck*>(extractPkt(frame));
                         if(appPkt) {
                             if(appPkt->getFlowId() == flowId && appPkt->getGenerationId() == generationId) {
-                                fprintf(stderr, "(%s) Pacote CodedDataAck deletado\n", getMyNodeName().c_str());
+                                debugprintf(stderr, LOG_LEVEL_1, "(%s) Pacote CodedDataAck deletado\n", getMyNodeName().c_str());
                                 delete frame;
                                 return true;
                             }
                         }
                     } else {
-                        fprintf(stderr, "(%s) Nao eh possivel deletar pacote pois esta sendo transmitido\n", getMyNodeName().c_str());
+                        debugprintf(stderr, LOG_LEVEL_1, "(%s) Nao eh possivel deletar pacote pois esta sendo transmitido\n", getMyNodeName().c_str());
                     }
                     return false;
                 });
 
-
         auto packetToSend = ccackBaseline->replacePacket(flowId);
         if (packetToSend) {
-            fprintf(stderr, "%s: substituindo pacote\n",
+            debugprintf(stderr, LOG_LEVEL_1, "%s: substituindo pacote\n",
                     getMyNodeName().c_str());
             sendToIp(packetToSend, IPv4Address::ALLONES_ADDRESS);
         } else {
-            fprintf(stderr, "%s: Não ha pacote para substituir!\n",
+            debugprintf(stderr, LOG_LEVEL_1, "%s: Não ha pacote para substituir!\n",
                     getMyNodeName().c_str());
         }
 #endif
     } else {
-        fprintf(stderr, "(%s) Nao eh nem upstream nem downstream. SAINDO!\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Nao eh nem upstream nem downstream. SAINDO!\n",
                 getMyNodeName().c_str());
         delete packet;
     }
-
-
 
     if (result) {
         switch (result->getType()) {
         case CODED_EACK: {
             fprintf(stderr, "(%s) Retornando pacote CodedEACK\n",
                     getMyNodeName().c_str());
-
             auto eackPkt = dynamic_cast<CodedEAck*>(result);
 
             ncorp::PacketSizeConfigurator().configure(eackPkt);
@@ -508,7 +496,7 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
             break;
 
         case CODED_ACK: {
-            fprintf(stderr, "(%s) Retornando pacote CodedACK\n",
+            debugprintf(stderr, LOG_LEVEL_1, "(%s) Retornando pacote CodedACK\n",
                     getMyNodeName().c_str());
             auto packet = dynamic_cast<CodedAck*>(result);
             ncorp::PacketSizeConfigurator().configure(packet);
@@ -520,8 +508,7 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
         }
 
     }
-
-    fprintf(stderr, "(%s) Ncorp::handleCodedDataAckPkt End\n",
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleCodedDataAckPkt End\n",
             getMyNodeName().c_str());
     return delay;
 }
@@ -535,41 +522,40 @@ void Ncorp::deliverReceivedBlock(uint16_t flowId, IPv4Address from,
 
 void Ncorp::handleMacControlMsg(cMessage* msg) {
     if (msg->getKind() == Ieee80211Mac::AVAILABLE_CHANNEL) {
-        fprintf(stderr, "(%s) Ncorp::handleMacControlMsg Begin\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleMacControlMsg Begin\n",
                 getMyNodeName().c_str());
-
         delete msg;
         auto packet_to_send = ccackBaseline->nextPacketToTransmit();
         if (packet_to_send) {
-            fprintf(stderr, "(%s) Ha pacote para transmitir\n",
+            debugprintf(stderr, LOG_LEVEL_1, "(%s) Ha pacote para transmitir\n",
                     getMyNodeName().c_str());
             if (!packet_to_send->isInovative()) {
-                fprintf(stderr,
+                debugprintf(stderr, LOG_LEVEL_1,
                         "(%s) Pacote nao inovativo. Verificar se já ha pacote na pilha de transmissao\n",
                         getMyNodeName().c_str());
                 auto transmissionQueue = macModule->transmissionQueue();
-                fprintf(stderr, "Passou 1\n");
+                debugprintf(stderr, LOG_LEVEL_1, "Passou 1\n");
                 for (auto it = transmissionQueue->begin();
                         it != transmissionQueue->end(); it++) {
 
-                    fprintf(stderr, "Tentando descartar pacote\n");
+                    debugprintf(stderr, LOG_LEVEL_1, "Tentando descartar pacote\n");
 
-                    fprintf(stderr, "Passou 1.1\n");
+                    debugprintf(stderr, LOG_LEVEL_1, "Passou 1.1\n");
                     auto oldPkt = dynamic_cast<CodedDataAck*>(extractPkt(*it));
 
                     if (oldPkt) {
-                        fprintf(stderr, "Passou 1.2\n");
+                        debugprintf(stderr, LOG_LEVEL_1, "Passou 1.2\n");
                         if (oldPkt->getFlowId() == packet_to_send->getFlowId()
                                 && oldPkt->getGenerationId()
                                         == packet_to_send->getGenerationId()) {
-                            fprintf(stderr, "(%s) Descartando pacote novo\n",
+                            debugprintf(stderr, LOG_LEVEL_1, "(%s) Descartando pacote novo\n",
                                     getMyNodeName().c_str());
                             delete packet_to_send; //Nao eh necessario transmitir esse pacote
                             packet_to_send = NULL;
                         }
                     } else {
-                        fprintf(stderr, "Passou 1.3\n");
-                        fprintf(stderr, "(%s) Tentando descartar pacote\n",
+                        debugprintf(stderr, LOG_LEVEL_1, "Passou 1.3\n");
+                        debugprintf(stderr, LOG_LEVEL_1, "(%s) Tentando descartar pacote\n",
                                 getMyNodeName().c_str());
                     }
                 }
@@ -580,11 +566,11 @@ void Ncorp::handleMacControlMsg(cMessage* msg) {
         if (packet_to_send) {
             sendToIp(packet_to_send, IPv4Address::ALLONES_ADDRESS);
         } else {
-            fprintf(stderr, "(%s) Nao ha pacote para enviar\n",
+            debugprintf(stderr, LOG_LEVEL_1, "(%s) Nao ha pacote para enviar\n",
                     getMyNodeName().c_str());
         }
 
-        fprintf(stderr, "(%s) Ncorp::handleMacControlMsg End\n\n",
+        debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleMacControlMsg End\n\n",
                 getMyNodeName().c_str());
     } else {
         delete msg;

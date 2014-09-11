@@ -38,6 +38,7 @@ void ETXMetric::initialize() {
     probeSize = par("ETXProbeSize");
     probeTime = par("ETXProbeTime");
     etxW = par("ETXW");
+    reliabilityFactor = par("ETXReliabilityFactor");
 
     if (!par("ETXDisableEvents").boolValue()) {
         sendProbeEvent = new cMessage("etx-send-probe", SEND_PROBE);
@@ -154,16 +155,16 @@ void ETXMetric::processNetPck(IPv4Address from, cMessage* msg) {
                             cSets[t.addr].forwardSet.insert(from);
                             cSets[t.addr].position = targetPosition;
                             cSets[t.addr].target = t.addr;
-                        } /*else {
-                         auto &fs = cSets[t.addr].forwardSet;
-                         if(std::find(fs.begin(), fs.end(), from) != fs.end()) { //
-                         fs.erase(from);
-                         if(!cSets[t.addr].isNeighbour && fs.empty()) {
-                         cSets.erase(t.addr);
+                        } else {
+                            auto &fs = cSets[t.addr].forwardSet;
+                            if(std::find(fs.begin(), fs.end(), from) != fs.end()) { //
+                                fs.erase(from);
+                                if(!cSets[t.addr].isNeighbour && fs.empty()) {
+                                    cSets.erase(t.addr);
 
-                         }
-                         }
-                         }*/
+                                }
+                            }
+                        }
                     }
 
                 });
@@ -184,6 +185,19 @@ void ETXMetric::finish() {
         delete cancelEvent(sendProbeEvent);
 
     if (par("ETXOutputConfig").boolValue()) {
+
+        removeOldEntries();
+
+        fprintf(stderr, "Node = %s\n", convertToSrt(getMyNetAddr()).c_str());
+        fprintf(stderr, "Now = %f\n", simTime().dbl());
+        for_each(neighbours.begin(), neighbours.end(), [](std::pair<IPv4Address, MacNeighbour> node){
+            fprintf(stderr, "Neighbour = %s\n", convertToSrt(node.first).c_str());
+            fprintf(stderr, "Newest Update = %f\n", node.second.newestUpdate.dbl());
+            for_each(node.second.y.begin(), node.second.y.end(),[](simtime_t t){
+                fprintf(stderr, "packets received = %f\n", t.dbl());
+            });
+        });
+        fprintf(stderr, "Node = %s\n\n", convertToSrt(getMyNetAddr()).c_str());
 
         cXMLElement* root = new cXMLElement("node", "", NULL);
         root->setAttribute("id", convertToSrt(getMyNetAddr()).c_str());
@@ -297,15 +311,20 @@ double ETXMetric::getExpectedPck() const {
 void ETXMetric::removeOldEntries() {
     auto now = simTime();
     auto func = [now, this](simtime_t event) {
+//        fprintf(stderr, "now = %f\nevent = %f\nW = %f\n\n", now.dbl(), event.dbl(), this->etxW.dbl());
         return (now - event) > this->etxW;
     };
 
     //Se
     for (auto it = neighbours.begin(); it != neighbours.end(); it++) {
         if (func(it->second.newestUpdate)) {
+            fprintf(stderr, "Remove vizinho!");
             removeNeighbour(it->first);
         } else {
+            auto i = it->second.y.size();
             it->second.y.remove_if(func);
+            if(i != it->second.y.size())
+                fprintf(stderr, "Remove vizinho!");
             if (it->second.y.empty())
                 removeNeighbour(it->first);
         }
@@ -414,6 +433,18 @@ std::list<IPv4Address> ETXMetric::findCandidateSet(IPv4Address target) {
                 [&result](std::pair<IPv4Address, Coord> node1) {
                     result.push_back(node1.first);
                 });
+
+        if(reliabilityFactor > 0) {
+            double achievedReliability = 0;
+            auto it = result.begin();
+
+            while(it != result.end() && reliabilityFactor > achievedReliability) {
+                achievedReliability += getCost(*it);
+                it++;
+            }
+
+            result.erase(it, result.end());
+        }
     }
 
     return result;

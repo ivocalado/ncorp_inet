@@ -61,6 +61,7 @@ protected:
     void removeOldEntries();
     void removeNeighbour(IPv4Address neighbour);//Remove todas as referencias a um vizinho
     void parseInitialConfig();
+    double reliabilityFactor;
 public:
     ETXMetric();
     virtual ~ETXMetric();

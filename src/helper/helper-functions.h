@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "constants.h"
 using namespace std;
 
 
@@ -34,7 +35,7 @@ template<typename T> string convertToSrt(T s) {
 
 void print(std::vector<uint8_t> v,uint32_t nodeId);
 
-
+int debugprintf(FILE* out, LogLevel level, const char* format, ...);
 
 
 #endif //_HELPERS_
