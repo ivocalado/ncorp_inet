@@ -63,6 +63,7 @@ void CcackBaseline::handleNewDblValue(IPv4Address neighbour, double dblValue,
 //Manipula um pacote eack. Retorna o endereço do destino a ser roteado ou L3NULL caso tenha atingido o destino
 IPv4Address CcackBaseline::handleEAckPkt(CodedEAck* packet) {
     auto flowId = packet->getFlowId();
+    auto src = packet->getFlowSrcAddr();
     auto generationId = packet->getGenerationId();
     auto flow = find_if(flows.begin(), flows.end(),
             [flowId](std::shared_ptr<ncorp::Flow> f) {
@@ -70,12 +71,9 @@ IPv4Address CcackBaseline::handleEAckPkt(CodedEAck* packet) {
             });
     if (flow != flows.end()) {
         (*flow)->handleEAck(generationId);
-        auto src = getSrcByFlow(flowId);
-        delete packet;
-        return src != myNetAddr ? src : IPv4Address::UNSPECIFIED_ADDRESS; //Se for a fonte para o roteamento
     }
     delete packet;
-    return IPv4Address::UNSPECIFIED_ADDRESS;
+    return src != myNetAddr ? src : IPv4Address::UNSPECIFIED_ADDRESS; //Se for a fonte para o roteamento
 }
 
 NcorpPacket* CcackBaseline::handleCodedDataAtDownstream(CodedDataAck* packet,

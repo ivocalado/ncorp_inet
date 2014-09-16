@@ -90,6 +90,7 @@ packet CodedEAck extends NcorpPacket
     uint16_t flowId;
     uint16_t generationId;
     IPv4Address nextHopAddr;
+    IPv4Address flowSrcAddr; //Especifica a origem do fluxo
 }
 
 packet CodedDataAck extends NcorpPacket

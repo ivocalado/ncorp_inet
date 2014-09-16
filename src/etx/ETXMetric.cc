@@ -289,7 +289,7 @@ double ETXMetric::getCost(IPv4Address neighbour) {
 
     auto it = neighbours.find(neighbour);
     if (it == neighbours.end())
-        return -1;
+        ASSERT(false);//Se chegar a esse ponto algo esta errado!!!
 
     double expectedPk = getExpectedPck();
     double pkRec = it->second.y.size();

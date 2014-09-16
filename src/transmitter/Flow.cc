@@ -119,7 +119,7 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
 
         if (generationId < leftBoundGenerationId) {
             auto packet = new CodedEAck();
-            packet->setNextHopAddr(source);
+            packet->setFlowSrcAddr(source);
 //        packet->setSeqNum() //Defined at Ncorp level
             packet->setFlowId(id);
             packet->setGenerationId(leftBoundGenerationId);
@@ -187,7 +187,7 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
 //            4.6) gera o pacote coded-ack e sai
         if (generationId < leftBoundGenerationId) {
             auto packet = new CodedEAck();
-            packet->setNextHopAddr(source); //This address will be replaced for the best neighbour
+            packet->setFlowSrcAddr(source);
 //        packet->setSeqNum() //Defined at Ncorp level
             packet->setFlowId(id);
             packet->setGenerationId(leftBoundGenerationId);
@@ -229,7 +229,7 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
             }
             debugprintf(stderr, LOG_LEVEL_3, "Retornando CODED_EACK\n");
             auto packet = new CodedEAck();
-            packet->setNextHopAddr(source);
+            packet->setFlowSrcAddr(source);
 //        packet->setSeqNum() //Defined at Ncorp level
             packet->setFlowId(id);
             packet->setGenerationId(leftBoundGenerationId);
@@ -271,6 +271,7 @@ void Flow::handleEAck(uint16_t generationId) {
             generations.erase(it); //Remove todas as gerações anteriores ao LB
         }
     }
+
 }
 
 void Flow::updateGto(uint16_t generationId) {

@@ -72,7 +72,7 @@ class INET_API Ncorp : public AppBase
     virtual void handleLowerMsg(cMessage *);
     virtual void handleSelfMsg(cMessage* msg);
     bool isUpstream(IPv4Address relay, IPv4Address target);
-    void handleEAckPkt(CodedEAck* packet);
+    void handleEAckPkt(CodedEAck* packet, IPv4Address from);
     void handleCodedAckPkt(CodedAck* packet, IPv4Address from);
     simtime_t handleCodedDataAckPkt(CodedDataAck* packet, IPv4Address from);
 

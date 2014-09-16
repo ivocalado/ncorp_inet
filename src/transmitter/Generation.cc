@@ -223,6 +223,7 @@ Generation::~Generation() {
         delete timeout;
 }
 
+int i = 0;
 void Generation::pushEncodedData(
         std::shared_ptr<std::vector<uint8_t> > payload) {
     debugprintf(stderr, LOG_LEVEL_4, "Generation::pushEncodedData Begin\n");
@@ -245,7 +246,7 @@ void Generation::pushEncodedData(
         if (ebuffers.bin.addRow(coefficients)) {
             markNextPktAsInovative = true;
             if (role == RECEIVER)
-                fprintf(stderr, "[Time = %f] Pacote inovativo!!\n", simTime().dbl());
+                fprintf(stderr, "[Time = %f] Pacote inovativo n: %d!!\n", simTime().dbl(), ++i);
             decoder->decode(&(*payload.get())[0]);
         }
 
