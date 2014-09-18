@@ -31,6 +31,7 @@
 #include "UDPSocket.h"
 #include "Coord.h"
 #include "CcackBaseline.h"
+#include <map>
 
 class ETXMetric;
 class Ieee80211Mac;
@@ -81,6 +82,7 @@ class INET_API Ncorp : public AppBase
 
     Ieee80211Mac* macModule;
 
+    std::map<uint16_t, long> receivedBlocks;
 
   public:
     std::list<IPv4Address> findCandidateSet(IPv4Address target);//Retorna o conjunto de candidatos baseados na localização geográfica dos nos

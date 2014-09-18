@@ -46,18 +46,13 @@ Flow::~Flow() {
  */
 double Flow::calculateDifferentialBacklog() {
     double dbl = 0;
-//    fprintf(stderr, "Passou 1\n");
-//    fprintf(stderr, "leftBoundGenerationId = %d\nwindow_size = %d\n", leftBoundGenerationId, window_size);
-//    fprintf(stderr, "size = %lu\n", generations.size());
-//    fprintf(stderr, "id = %d\n", (*generations.begin())->getId());
+
     for (auto gen = generations.begin();
             gen != generations.end()
                     && ((*gen)->getId() - leftBoundGenerationId) < window_size;
             gen++) {
-//        fprintf(stderr, "Passou 2\n");
         dbl += (*gen)->calculateDifferentialBacklog();
     }
-//    fprintf(stderr, "Passou 3\n");
     return dbl;
 }
 
@@ -308,6 +303,7 @@ void Flow::updateGto(uint16_t generationId) {
 //
 void Flow::pushRawBlock(std::vector<uint8_t> payload) {
     std::copy(payload.begin(), payload.end(), std::back_inserter(rawData));
+    fprintf(stderr, "Bloco recebido. Size = %lu\n", payload.size());
     while (rawData.size() >= generation_size * symbol_size) //Verifica se foi ultrapassado o tamanho total de dados da geração
             { //Repassa os dados para a geração
         std::vector<uint8_t> newGen;
@@ -321,6 +317,7 @@ void Flow::pushRawBlock(std::vector<uint8_t> payload) {
                         newGen, generation_size * symbol_size));
         generations.insert(generation);
         fprintf(stderr, "Geração criada ==> Id = %d!\n", genId);
+        fprintf(stderr, "rawDate::Size = %lu\n", rawData.size());
     }
 }
 
@@ -332,6 +329,7 @@ void Flow::flush() {
     std::vector<uint8_t> newGen;
     std::copy(rawData.begin(), rawData.end(), std::back_inserter(newGen));
     rawData.clear(); //Limpa buffer
+    fprintf(stderr, "newGen::Size = %lu\n", newGen.size());
 
     auto validPayload = newGen.size();
     size_t remainingBufferSize = (generation_size * symbol_size) - validPayload;
@@ -339,6 +337,7 @@ void Flow::flush() {
     std::copy(padding.begin(), padding.end(), back_inserter(newGen));
 
     auto genId = nextGenerationId();
+    fprintf(stderr, "Geração criada ==> Id = %d\n", genId);
     std::shared_ptr<Generation> generation(
             new Generation(nodeId.getInt(), genId, generation_size, symbol_size, newGen,
                     validPayload));

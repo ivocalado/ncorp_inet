@@ -43,6 +43,12 @@ using namespace std;
 Define_Module(Ncorp)
 ;
 
+string findHostByAddress(IPv4Address from) {
+    auto module = IPvXAddressResolver().findHostWithAddress(from);
+    stringstream str;
+    str<<module->getName()<<"["<<module->getIndex()<<"]";
+    return str.str();
+}
 NcorpPacket* extractPkt(Ieee80211DataOrMgmtFrame* pkt) {
     auto dataFrame = dynamic_cast<Ieee80211DataFrame*>(pkt);
 
@@ -270,6 +276,12 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
     auto flowId = packet->getFlowId();
     auto generationId = packet->getGenerationId();
 
+    fprintf(stderr, "Ncorp::handleEAckPkt Begin\n");
+    fprintf(stderr, "Host = %s (%s)\n", getMyNodeName().c_str(), convertToSrt(getMyNetAddr()).c_str());
+    fprintf(stderr, "realSouce = %s (%s)\n", findHostByAddress(realSource).c_str(), convertToSrt(realSource).c_str());
+    fprintf(stderr, "currentDestination = %s (%s)\n", findHostByAddress(currentDestination).c_str(), convertToSrt(currentDestination).c_str());
+    fprintf(stderr, "generationId = %d\n", generationId);
+
 #if DROP_MAC_PKT
     auto transmissionQueue = macModule->transmissionQueue();
 
@@ -332,14 +344,16 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
         eackPacket->setFlowId(flowId);
         eackPacket->setGenerationId(generationId);
         ncorp::PacketSizeConfigurator().configure(eackPacket);
+        fprintf(stderr, "Sending new packet to %s (%s)\n", findHostByAddress(nextHop).c_str(), convertToSrt(nextHop).c_str());
 
         sendToIp(eackPacket, IPv4Address::ALLONES_ADDRESS);
     } else {
+        fprintf(stderr, "Interrompendo fluxo\n");
         if(getMyNetAddr() == realSource) {
             fprintf(stderr, "[Time = %f] Recebimento da confirmação da transmissão da geração\n", simTime().dbl());
         }
     }
-
+    fprintf(stderr, "Ncorp::handleEAckPkt End\n\n");
     debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleEAckPkt End\n",
             getMyNodeName().c_str());
 }
@@ -482,23 +496,28 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
     if (result) {
         switch (result->getType()) {
         case CODED_EACK: {
+            //Send uncoded data to application
+            uint16_t flowId;
             auto eackPkt = dynamic_cast<CodedEAck*>(result);
+            auto realSource = eackPkt->getFlowSrcAddr();
+
+            std::shared_ptr<std::vector<uint8_t> > dataBlock(
+                    new std::vector<uint8_t>);
+            ccackBaseline->retrieveDecodedBlock(flowId, dataBlock);
+
+            deliverReceivedBlock(flowId, realSource, dataBlock);
+
+
 
             ncorp::PacketSizeConfigurator().configure(eackPkt);
-            auto realSource = eackPkt->getFlowSrcAddr();
+
 
             auto bestNeighbour = metric->findBestNeighbourTo(realSource);
             eackPkt->setNextHopAddr(bestNeighbour);
 
             sendToIp(eackPkt, IPv4Address::ALLONES_ADDRESS);
 
-            //Send uncoded data to application
-            uint16_t flowId;
-            std::shared_ptr<std::vector<uint8_t> > dataBlock(
-                    new std::vector<uint8_t>);
-            ccackBaseline->retrieveDecodedBlock(flowId, dataBlock);
 
-            deliverReceivedBlock(flowId, realSource, dataBlock);
 
         }
             break;
@@ -524,11 +543,17 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
 
 void Ncorp::deliverReceivedBlock(uint16_t flowId, IPv4Address from,
         std::shared_ptr<std::vector<uint8_t> > block) {
-    if (block->size())
+    if (block->size()) {
+        if(receivedBlocks.find(flowId) == receivedBlocks.end())
+            receivedBlocks[flowId] = block->size();
+        else
+            receivedBlocks[flowId] += block->size();
         fprintf(stderr,
-                "[Time = %f] Received block. Size = %lu from: %s flowId = %d\n",
-                simTime().dbl(), block->size(), convertToSrt(from).c_str(),
-                flowId);
+                        "[Time = %f] Received block. Received Block = %lu, Acumullated blocks = %lu from: %s flowId = %d\n",
+                        simTime().dbl(), block->size(), receivedBlocks[flowId], convertToSrt(from).c_str(),
+                        flowId);
+    }
+
 }
 
 void Ncorp::handleMacControlMsg(cMessage* msg) {
@@ -536,6 +561,7 @@ void Ncorp::handleMacControlMsg(cMessage* msg) {
         debugprintf(stderr, LOG_LEVEL_1,
                 "(%s) Ncorp::handleMacControlMsg Begin\n",
                 getMyNodeName().c_str());
+
         delete msg;
         auto packet_to_send = ccackBaseline->nextPacketToTransmit();
         if (packet_to_send) {

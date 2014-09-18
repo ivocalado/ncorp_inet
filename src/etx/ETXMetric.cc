@@ -12,6 +12,7 @@
 #include "helper-functions.h"
 #include <fstream>
 #include <iostream>
+#include <tuple>
 
 using namespace std;
 
@@ -450,23 +451,46 @@ std::list<IPv4Address> ETXMetric::findCandidateSet(IPv4Address target) {
     return result;
 }
 
+/**
+ * 1) Calcula a lista de vizinhos com o menor custo
+ * 2) Ordena os vizinhos com o melhor custo
+ * 3) Seleciona o vizinho mais proximo do destino
+ */
 IPv4Address ETXMetric::findBestNeighbourTo(IPv4Address target) {
     if (cSets.find(target) == cSets.end())
         return IPv4Address::UNSPECIFIED_ADDRESS;
-    auto fs = cSets[target].forwardSet;
-    std::map<IPv4Address, double> m;
 
-    for_each(fs.begin(), fs.end(), [&m, this](IPv4Address adr) {
-        m[adr] = getCost(adr);
+    vector<std::tuple<IPv4Address /*host*/, double /*custo*/, Coord /*posicao*/> > localNeighbours;
+
+    auto fs = cSets[target].forwardSet;
+
+    for_each(fs.begin(), fs.end(), [&localNeighbours, this](IPv4Address adr) {
+        localNeighbours.push_back(make_tuple(adr, getCost(adr), cSets[adr].position));
     });
 
+    auto targetPosition = cSets[target].position;
     if (cSets[target].isNeighbour)
-        m[target] = getCost(target);
+        localNeighbours.push_back(make_tuple(target, getCost(target), targetPosition));
 
-    ASSERT(!m.empty());
+    ASSERT(!localNeighbours.empty());
 
-    return std::min_element(m.begin(), m.end(),
-            [](std::pair<const IPv4Address, double>& p1, std::pair<const IPv4Address, double>& p2) {return p1.second < p2.second;})->first;
+    //Ordenar pelo custo
+    std::sort(localNeighbours.begin(), localNeighbours.end(), [](const std::tuple<IPv4Address, double, Coord> & p1, const std::tuple<IPv4Address, double, Coord> & p2){
+        return std::get<1>(p1) < std::get<1>(p2);
+    });
+
+    vector<std::tuple<IPv4Address /*host*/, double /*custo*/, Coord /*posicao*/> > neighboursTmp;
+
+    auto bestCost = std::get<1>(localNeighbours.front());
+
+    std::copy_if(localNeighbours.begin(), localNeighbours.end(), back_inserter(neighboursTmp), [bestCost](const std::tuple<IPv4Address, double, Coord> & p1){
+        return std::get<1>(p1) <= bestCost;
+    });
+
+
+    return std::get<0>(*std::min_element(neighboursTmp.begin(), neighboursTmp.end(),
+            [targetPosition](const std::tuple<IPv4Address, double, Coord> & p1, const std::tuple<IPv4Address, double, Coord> & p2) {
+        return targetPosition.distance(std::get<2>(p1)) < targetPosition.distance(std::get<2>(p2));}));
 }
 
 double ETXMetric::getTransmittionTime() {
