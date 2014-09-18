@@ -24,6 +24,7 @@
 #include <set>
 #include <vector>
 #include <deque>
+#include <functional>
 
 #include "IPv4Address.h"
 #include "Generation.h"
@@ -309,7 +310,7 @@ protected:
     double credits;
 
     //The list of current active generations
-    std::set<std::shared_ptr<Generation> > generations;
+    std::set<std::shared_ptr<Generation>, std::function<bool (const std::shared_ptr<Generation>&, const std::shared_ptr<Generation>&)> > generations;
 
     // The current generation timeout
     simtime_t gto;

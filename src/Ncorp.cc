@@ -238,6 +238,8 @@ void Ncorp::handleSelfMsg(cMessage* msg) {
                     dst.str(true).c_str());
         } else {
             ccackBaseline->pushRawBlock(getMyNetAddr(), dst, flowId, data_in);
+            ccackBaseline->flushStream(flowId);
+
         }
         debugprintf(stderr, LOG_LEVEL_1, "%s <=> %s\n",
                 getMyNetAddr().str(true).c_str(), dst.str(true).c_str());
@@ -261,13 +263,9 @@ bool Ncorp::isUpstream(IPv4Address relay, IPv4Address target) {
 }
 
 void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
-    fprintf(stderr, "(%s)(%s) Ncorp::handleEAckPkt Begin\n",
-            getMyNodeName().c_str(), convertToSrt(getMyNetAddr()).c_str());
-    fprintf(stderr, "From = %s\n", convertToSrt(from).c_str());
-    fprintf(stderr, "To = %s\n",
-            convertToSrt(packet->getFlowSrcAddr()).c_str());
     debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleEAckPkt Begin\n",
             getMyNodeName().c_str());
+    auto realSource = packet->getFlowSrcAddr();
     auto currentDestination = packet->getNextHopAddr();
     auto flowId = packet->getFlowId();
     auto generationId = packet->getGenerationId();
@@ -327,8 +325,6 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
     auto destination = ccackBaseline->handleEAckPkt(packet);
     if (currentDestination == getMyNetAddr()
             && destination != IPv4Address::UNSPECIFIED_ADDRESS) {
-        fprintf(stderr, "(%s) Reenviando pacote EACK\n",
-                getMyNodeName().c_str());
         auto nextHop = metric->findBestNeighbourTo(destination);
         auto eackPacket = new CodedEAck();
         eackPacket->setFlowSrcAddr(destination);
@@ -339,10 +335,13 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
 
         sendToIp(eackPacket, IPv4Address::ALLONES_ADDRESS);
     } else {
-        fprintf(stderr, "(%s) Interrompendo o fluxo\n",
-                getMyNodeName().c_str());
+        if(getMyNetAddr() == realSource) {
+            fprintf(stderr, "[Time = %f] Recebimento da confirmação da transmissão da geração\n", simTime().dbl());
+        }
     }
-    fprintf(stderr, "(%s) Ncorp::handleEAckPkt End\n", getMyNodeName().c_str());
+
+    debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleEAckPkt End\n",
+            getMyNodeName().c_str());
 }
 
 void Ncorp::handleCodedAckPkt(CodedAck* packet, IPv4Address relay) {
@@ -483,9 +482,6 @@ simtime_t Ncorp::handleCodedDataAckPkt(CodedDataAck* packet,
     if (result) {
         switch (result->getType()) {
         case CODED_EACK: {
-            fprintf(stderr, "(%s) Retornando pacote CodedEACK\n",
-                    getMyNodeName().c_str());
-            fprintf(stderr, "FlowID = %d\n", flowId);
             auto eackPkt = dynamic_cast<CodedEAck*>(result);
 
             ncorp::PacketSizeConfigurator().configure(eackPkt);
@@ -530,7 +526,7 @@ void Ncorp::deliverReceivedBlock(uint16_t flowId, IPv4Address from,
         std::shared_ptr<std::vector<uint8_t> > block) {
     if (block->size())
         fprintf(stderr,
-                "Time = %f Received block. Size = %lu from: %s flowId = %d\n",
+                "[Time = %f] Received block. Size = %lu from: %s flowId = %d\n",
                 simTime().dbl(), block->size(), convertToSrt(from).c_str(),
                 flowId);
 }

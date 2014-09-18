@@ -27,7 +27,7 @@ Flow::Flow(Ncorp* mNcorp, IPv4Address nId, uint16_t ident,
         mainNcorp(mNcorp), nodeId(nId), id(ident), source(src), destination(
                 dest), role(rl), generation_size(gen_size), symbol_size(
                 symb_size), window_size(1), useSingleGeneration(usg), leftBoundGenerationId(
-                1), credits(0) {
+                1), credits(0), generations([](const std::shared_ptr<Generation>& g1, const std::shared_ptr<Generation>& g2){return g1->getId() < g2->getId();}) {
     gto = 3 * generation_size;
     sgtt = -1;
     gttvar = -1;
@@ -46,12 +46,18 @@ Flow::~Flow() {
  */
 double Flow::calculateDifferentialBacklog() {
     double dbl = 0;
+//    fprintf(stderr, "Passou 1\n");
+//    fprintf(stderr, "leftBoundGenerationId = %d\nwindow_size = %d\n", leftBoundGenerationId, window_size);
+//    fprintf(stderr, "size = %lu\n", generations.size());
+//    fprintf(stderr, "id = %d\n", (*generations.begin())->getId());
     for (auto gen = generations.begin();
             gen != generations.end()
                     && ((*gen)->getId() - leftBoundGenerationId) < window_size;
             gen++) {
+//        fprintf(stderr, "Passou 2\n");
         dbl += (*gen)->calculateDifferentialBacklog();
     }
+//    fprintf(stderr, "Passou 3\n");
     return dbl;
 }
 
@@ -302,7 +308,7 @@ void Flow::updateGto(uint16_t generationId) {
 //
 void Flow::pushRawBlock(std::vector<uint8_t> payload) {
     std::copy(payload.begin(), payload.end(), std::back_inserter(rawData));
-    if (rawData.size() >= generation_size * symbol_size) //Verifica se foi ultrapassado o tamanho total de dados da geração
+    while (rawData.size() >= generation_size * symbol_size) //Verifica se foi ultrapassado o tamanho total de dados da geração
             { //Repassa os dados para a geração
         std::vector<uint8_t> newGen;
         std::copy_n(rawData.begin(), generation_size * symbol_size,
@@ -314,6 +320,7 @@ void Flow::pushRawBlock(std::vector<uint8_t> payload) {
                 new Generation(nodeId.getInt(), genId, generation_size, symbol_size,
                         newGen, generation_size * symbol_size));
         generations.insert(generation);
+        fprintf(stderr, "Geração criada ==> Id = %d!\n", genId);
     }
 }
 
