@@ -276,11 +276,11 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
     auto flowId = packet->getFlowId();
     auto generationId = packet->getGenerationId();
 
-    fprintf(stderr, "Ncorp::handleEAckPkt Begin\n");
-    fprintf(stderr, "Host = %s (%s)\n", getMyNodeName().c_str(), convertToSrt(getMyNetAddr()).c_str());
-    fprintf(stderr, "realSouce = %s (%s)\n", findHostByAddress(realSource).c_str(), convertToSrt(realSource).c_str());
-    fprintf(stderr, "currentDestination = %s (%s)\n", findHostByAddress(currentDestination).c_str(), convertToSrt(currentDestination).c_str());
-    fprintf(stderr, "generationId = %d\n", generationId);
+//    fprintf(stderr, "Ncorp::handleEAckPkt Begin\n");
+//    fprintf(stderr, "Host = %s (%s)\n", getMyNodeName().c_str(), convertToSrt(getMyNetAddr()).c_str());
+//    fprintf(stderr, "realSouce = %s (%s)\n", findHostByAddress(realSource).c_str(), convertToSrt(realSource).c_str());
+//    fprintf(stderr, "currentDestination = %s (%s)\n", findHostByAddress(currentDestination).c_str(), convertToSrt(currentDestination).c_str());
+//    fprintf(stderr, "generationId = %d\n", generationId);
 
 #if DROP_MAC_PKT
     auto transmissionQueue = macModule->transmissionQueue();
@@ -344,16 +344,16 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
         eackPacket->setFlowId(flowId);
         eackPacket->setGenerationId(generationId);
         ncorp::PacketSizeConfigurator().configure(eackPacket);
-        fprintf(stderr, "Sending new packet to %s (%s)\n", findHostByAddress(nextHop).c_str(), convertToSrt(nextHop).c_str());
+//        fprintf(stderr, "Sending new packet to %s (%s)\n", findHostByAddress(nextHop).c_str(), convertToSrt(nextHop).c_str());
 
         sendToIp(eackPacket, IPv4Address::ALLONES_ADDRESS);
     } else {
-        fprintf(stderr, "Interrompendo fluxo\n");
+//        fprintf(stderr, "Interrompendo fluxo\n");
         if(getMyNetAddr() == realSource) {
             fprintf(stderr, "[Time = %f] Recebimento da confirmação da transmissão da geração\n", simTime().dbl());
         }
     }
-    fprintf(stderr, "Ncorp::handleEAckPkt End\n\n");
+//    fprintf(stderr, "Ncorp::handleEAckPkt End\n\n");
     debugprintf(stderr, LOG_LEVEL_1, "(%s) Ncorp::handleEAckPkt End\n",
             getMyNodeName().c_str());
 }

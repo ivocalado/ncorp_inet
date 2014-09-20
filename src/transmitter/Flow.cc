@@ -31,8 +31,10 @@ Flow::Flow(Ncorp* mNcorp, IPv4Address nId, uint16_t ident,
     gto = 3 * generation_size;
     sgtt = -1;
     gttvar = -1;
-    gto_alpha = 1.0 / 8.0;
-    gto_beta = 1.0 / 4.0;
+    gto_alpha = mainNcorp->par("CCACKGtoAlpha");//1.0 / 8.0;
+    gto_beta = mainNcorp->par("CCACKGtoBeta"); //1.0 / 4.0;
+
+    fprintf(stderr, "gto = %f\nsgtt = %f\ngttvar = %f\n\n", gto.dbl(), sgtt.dbl(), gttvar.dbl());
 }
 
 Flow::~Flow() {
@@ -262,7 +264,7 @@ void Flow::handleEAck(uint16_t generationId) {
             return;
 
         if (role == SENDER)
-            updateGto(generationId);
+            updateGto(generationId);//
 
         leftBoundGenerationId = generationId;
         for (auto it = generations.begin();
@@ -276,9 +278,10 @@ void Flow::handleEAck(uint16_t generationId) {
 }
 
 void Flow::updateGto(uint16_t generationId) {
+    auto ackedGeneration = generationId - 1;
     auto generationIt = std::find_if(generations.begin(), generations.end(),
-            [generationId](std::shared_ptr<Generation> generation) {
-                return generationId == generation->getId();
+            [ackedGeneration](std::shared_ptr<Generation> generation) {
+                return ackedGeneration == generation->getId();
             });
 
     if (generationIt != generations.end()) {
@@ -296,7 +299,9 @@ void Flow::updateGto(uint16_t generationId) {
             sgtt = (1 - gto_alpha) * sgtt + gto_alpha * r;
         }
 
-        gto = sgtt + max(simtime_t(1), 4 * gttvar);
+        gto = max(simtime_t(1), sgtt + 4 * gttvar);
+
+        fprintf(stderr, "R' = %f\ngto = %f\nsgtt = %f\ngttvar = %f\n\n", r.dbl(), gto.dbl(), sgtt.dbl(), gttvar.dbl());
     }
 }
 

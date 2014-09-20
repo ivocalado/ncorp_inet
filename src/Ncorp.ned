@@ -127,6 +127,8 @@ simple Ncorp like IUDPApp
         int CCACKGenerationSize = default(32); //Define o tamanho da geração em número de pacotes
         int CCACKPayloadSize @unit (B) = default(1500 B);
         double CCACKFlowTimeout @unit(s) = default(300 s);
+        double CCACKGtoAlpha = default(1.0/8.0);
+        double CCACKGtoBeta = default(1.0/4.0);
         
         
         @signal[sentPk](type=cPacket);
