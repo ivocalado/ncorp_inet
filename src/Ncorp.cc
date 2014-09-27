@@ -350,7 +350,7 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
     } else {
 //        fprintf(stderr, "Interrompendo fluxo\n");
         if(getMyNetAddr() == realSource) {
-            fprintf(stderr, "[Time = %f] Recebimento da confirmação da transmissão da geração\n", simTime().dbl());
+            fprintf(stderr, "[Time = %f] Recebimento da confirmação da transmissão da geração. A geracao %d pode ser transmitida\n", simTime().dbl(), generationId);
         }
     }
 //    fprintf(stderr, "Ncorp::handleEAckPkt End\n\n");
