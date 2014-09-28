@@ -133,14 +133,21 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
 
         }
 
+        std::vector<std::shared_ptr<Generation>> generationsToDrop;
         std::for_each(generations.begin(), generations.end(),
-                [this](std::shared_ptr<Generation> generation) {
+                [this, &generationsToDrop](std::shared_ptr<Generation> generation) {
                     if(this->leftBoundGenerationId > generation->getId()) {
                         debugprintf(stderr, LOG_LEVEL_3, "Removendo geração antiga\n");
-                        this->generations.erase(generation);
+                        generationsToDrop.push_back(generation);
+//                        this->generations.erase(generation);
                     }
 
                 }); //Remove todas as gerações antigas
+
+        std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> gen){
+            generations.erase(gen);
+        });
+
 
         auto generationIt = std::find_if(generations.begin(), generations.end(),
                 [generationId](std::shared_ptr<Generation> generation) {
@@ -220,6 +227,7 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
         if (generation->getId() == leftBoundGenerationId
                 && generation->isComplete()) {
             debugprintf(stderr, LOG_LEVEL_3, "Geracao completa. Entregando dados da geracao\n");
+            std::vector<std::shared_ptr<Generation>> generationsToDrop;
             for (auto it = generations.begin();
                     it != generations.end()
                             && (*it)->getId() == leftBoundGenerationId
@@ -227,9 +235,14 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
                 auto output = (*it)->getDecodedBlock(); //Retrieve the decoded block
                 copy(output->begin(), output->end(),
                         back_inserter(rawDataOutput)); //Copy the vector to the output
-                generations.erase(it);
+                generationsToDrop.push_back(*it);
                 leftBoundGenerationId++;
             }
+
+            std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> g){
+                generations.erase(g);
+            });
+
             debugprintf(stderr, LOG_LEVEL_3, "Retornando CODED_EACK\n");
             auto packet = new CodedEAck();
             packet->setFlowSrcAddr(source);
@@ -267,12 +280,17 @@ void Flow::handleEAck(uint16_t generationId) {
             updateGto(generationId);//
 
         leftBoundGenerationId = generationId;
+        std::vector<std::shared_ptr<Generation>> generationsToDrop;
         for (auto it = generations.begin();
                 it != generations.end()
                         && (*it)->getId() < leftBoundGenerationId; it++) {
             mainNcorp->cancelEvent((*it)->getTimeoutMsg());
-            generations.erase(it); //Remove todas as gerações anteriores ao LB
+            generationsToDrop.push_back(*it);
+//            generations.erase(it); //Remove todas as gerações anteriores ao LB
         }
+        std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> g){
+            generations.erase(g);
+        });
     }
 
 }
@@ -475,12 +493,17 @@ void Flow::processTimer(cMessage* msg) {
         if (generationIt != generations.end()) {
             leftBoundGenerationId = (*generationIt)->getId() + 1;
 
+            std::vector<std::shared_ptr<Generation>> generationsToDrop;
             for (auto it = generations.begin();
                     it != generations.end()
                             && (*it)->getId() < leftBoundGenerationId; it++) {
                 mainNcorp->cancelEvent((*it)->getTimeoutMsg());
-                generations.erase(it); //Remove todas as gerações anteriores ao LB
+                generationsToDrop.push_back(*it);
             }
+
+            std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> gen){
+                generations.erase(gen);
+            });
 
         } else {
             cRuntimeError(mainNcorp,

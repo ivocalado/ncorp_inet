@@ -254,8 +254,11 @@ void Ncorp::handleSelfMsg(cMessage* msg) {
         break;
     case GENERATION_TIMEOUT: {
 //        debugprintf(stderr, "\n[Node = %lu] [Time = %f] GENERATION_TIMEOUT\n", myNetwAddr, simTime().dbl());
+        fprintf(stderr, "Descartando geração antiga!\n");
         auto flow = (ncorp::Flow*) msg->getContextPointer();
         flow->processTimer(msg);
+
+        askForChannelOpportunity();
     }
         break;
     default:
