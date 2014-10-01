@@ -205,6 +205,12 @@ public:
 
     void printInfo();
 
+    void startTransmit(); //Marca o inicio da transmissão, ajustando o t0
+
+    void stopTransmit(); //Marca o fim da transmissão, ajustando o t_eack
+
+    simtime_t calculateDT(); //Calcula DT, tempo de entrega
+
 protected:
     uint32_t nodeId;
     uint16_t id;
@@ -230,6 +236,8 @@ protected:
     }
     bool markNextPktAsInovative;
 
+    simtime_t t0; //Indica o momento que a geracao começou a ser transmitida
+    simtime_t t_eack; //Indica o momento em que se recebeu o E-ack que confirme a geração
 };
 
 } /* namespace ncorp */

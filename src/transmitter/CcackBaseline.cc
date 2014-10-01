@@ -20,9 +20,6 @@ CcackBaseline::CcackBaseline(Ncorp *mNcorp) :
         mainNcorp(mNcorp) {
 
     myNetAddr = mainNcorp->getMyNetAddr();
-    useSingleGeneration = mainNcorp->par("CCACKUseSingleGeneration");
-    generation_size = mainNcorp->par("CCACKGenerationSize");
-    packet_size = mainNcorp->par("CCACKPayloadSize");
     alfa = 5. / 6.;
     beta = 1. / 6.;
 }
@@ -101,10 +98,7 @@ NcorpPacket* CcackBaseline::handleCodedDataAtDownstream(CodedDataAck* packet,
         debugprintf(stderr, LOG_LEVEL_2, "Criando novo fluxo\n");
         std::shared_ptr<ncorp::Flow> newFlow(
                 new Flow(mainNcorp, myNetAddr, packet->getFlowId(),
-                        packet->getFlowSrcAddr(), packet->getFlowDstAddr(),
-                        myNetAddr == packet->getFlowDstAddr() ?
-                                RECEIVER : RELAY, generation_size, packet_size,
-                        useSingleGeneration));
+                        packet->getFlowSrcAddr(), packet->getFlowDstAddr()));
         flows.push_back(newFlow);
         result = newFlow->handleCodedPacket(generationId, baseWindow,
                 codedPacket, packet->getPayloadSize());
@@ -173,8 +167,7 @@ void CcackBaseline::pushRawBlock(IPv4Address from, IPv4Address dest,
         flow = *it;
     } else {
         flow = std::shared_ptr < ncorp::Flow
-                > (new Flow(mainNcorp, myNetAddr, flowId, from, dest, SENDER,
-                        generation_size, packet_size, useSingleGeneration));
+                > (new Flow(mainNcorp, myNetAddr, flowId, from, dest));
         flows.push_back(flow);
     }
     flow->pushRawBlock(payload);

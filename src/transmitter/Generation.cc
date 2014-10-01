@@ -29,8 +29,8 @@ template<class T> void print(matrix<T> &a) {
 
 template<class T> void print(std::vector<T> &v) {
     stringstream st;
-    for(auto i = 0U; i < v.size(); i++) {
-        st<<static_cast<int>(v[i])<<((i == (v.size() - 1)) ? "" : " ");
+    for (auto i = 0U; i < v.size(); i++) {
+        st << static_cast<int>(v[i]) << ((i == (v.size() - 1)) ? "" : " ");
     }
 
     debugprintf(stderr, LOG_LEVEL_4, "Linha recebida: %s\n", st.str().c_str());
@@ -41,7 +41,6 @@ void print(Brx &brx) {
     int rows = brx.countRows();
     debugprintf(stderr, LOG_LEVEL_4, "rows = %d\n", rows);
 
-
     for (int j = 0; j < rows; j++) {
         stringstream st;
         std::vector<uint8_t> a = brx.getRow(j);
@@ -50,13 +49,11 @@ void print(Brx &brx) {
         st << "(";
         for (size_t i = 0; i < a.size(); i++) {
 
-            st << static_cast<int>(a[i])
-                    << ((i == (a.size() - 1)) ? "" : " ");
+            st << static_cast<int>(a[i]) << ((i == (a.size() - 1)) ? "" : " ");
         }
         st << ") " << counter << (heard ? " *****\n" : " NOT heard\n");
         debugprintf(stderr, LOG_LEVEL_4, "%s", st.str().c_str());
     }
-
 
 }
 
@@ -65,7 +62,6 @@ void print(Btx &btx) {
     int rows = btx.countRows();
     debugprintf(stderr, LOG_LEVEL_4, "rows = %d\n", rows);
 
-
     for (int j = 0; j < rows; j++) {
         stringstream st;
         std::vector<uint8_t> a = btx.getRow(j);
@@ -73,8 +69,7 @@ void print(Btx &btx) {
         st << "(";
         for (size_t i = 0; i < a.size(); i++) {
 
-            st << static_cast<int>(a[i])
-                    << ((i == (a.size() - 1)) ? "" : " ");
+            st << static_cast<int>(a[i]) << ((i == (a.size() - 1)) ? "" : " ");
         }
         st << ") " << (heard ? " *****\n" : " NOT heard\n");
         debugprintf(stderr, LOG_LEVEL_4, "%s", st.str().c_str());
@@ -106,6 +101,7 @@ Generation::Generation(uint32_t nId, uint16_t ident, /*Role rl, */uint32_t sb,
     if (kodo::is_systematic_encoder(encoder)) //
         kodo::set_systematic_off(encoder); //
     timeout = new cMessage("generation-timeout", GENERATION_TIMEOUT);
+    t0 = t_eack = -1.0;
 }
 
 Generation::Generation(uint32_t nId, uint16_t ident, Role rl, uint32_t sb,
@@ -117,6 +113,8 @@ Generation::Generation(uint32_t nId, uint16_t ident, Role rl, uint32_t sb,
     decoder = decoder_factory.build();
     timeout = new cMessage("generation-timeout", GENERATION_TIMEOUT);
     markNextPktAsInovative = false;
+
+    t0 = t_eack = -1.0;
 }
 
 size_t Generation::getPayloadSize() const {
@@ -173,7 +171,6 @@ void Generation::pushAckCoding(std::vector<uint8_t> payload, uint32_t seed) {
         }
 
     }
-
 
     print(ebuffers.btx);
     debugprintf(stderr, LOG_LEVEL_4, "Generation::pushAckCoding End\n");
@@ -240,13 +237,15 @@ void Generation::pushEncodedData(
         print(coefficients);
 
         if (role == RECEIVER) {
-            debugprintf(stderr, LOG_LEVEL_4, "[Time = %f] Packet received!!\n", simTime().dbl());
+            debugprintf(stderr, LOG_LEVEL_4, "[Time = %f] Packet received!!\n",
+                    simTime().dbl());
         }
 
         if (ebuffers.bin.addRow(coefficients)) {
             markNextPktAsInovative = true;
             if (role == RECEIVER)
-                fprintf(stderr, "[Time = %f] Pacote inovativo n: %d!!\n", simTime().dbl(), ++i);
+                fprintf(stderr, "[Time = %f] Pacote inovativo n: %d!!\n",
+                        simTime().dbl(), ++i);
             decoder->decode(&(*payload.get())[0]);
         }
 
@@ -256,7 +255,8 @@ void Generation::pushEncodedData(
     }
 
     if (isComplete() && role == RECEIVER) {
-        debugprintf(stderr, LOG_LEVEL_4, "Geracao completa. Entregando dados à aplicação\n");
+        debugprintf(stderr, LOG_LEVEL_4,
+                "Geracao completa. Entregando dados à aplicação\n");
         data_out.reset(new std::vector<uint8_t>(decoder->block_size()));
         decoder->copy_symbols(sak::storage(*data_out.get()));
         data_out->erase(data_out->begin() + payloadSize, data_out->end());
@@ -366,9 +366,24 @@ cMessage* Generation::getTimeoutMsg() {
 }
 
 void Generation::printInfo() {
-    auto result = ebuffers.brx.getHmatrix(); //Recupera as linhas ouvidas de brx
-    concat_vertically(result, ebuffers.btx.getHmatrix()); //recupera e concatena as linhas ouvidas de btx ao final de brx
 
+}
+
+//Marca o inicio da transmissão, ajustando o t0
+void Generation::startTransmit() {
+    if (t0 < SIMTIME_ZERO)
+        t0 = simTime();
+}
+
+//Marca o fim da transmissão, ajustando o t_eack
+void Generation::stopTransmit() {
+    if (t_eack < SIMTIME_ZERO)
+        t_eack = simTime();
+}
+
+//Calcula DT, tempo de entrega
+simtime_t Generation::calculateDT() {
+    return t_eack < SIMTIME_ZERO? MAXTIME : t_eack - t0;
 }
 
 } /* namespace ncorp */

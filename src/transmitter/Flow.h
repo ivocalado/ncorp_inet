@@ -73,10 +73,6 @@ public:
          , uint16_t id
          , IPv4Address source
          , IPv4Address destination
-         , Role role
-         , uint32_t generation_size
-         , uint32_t symbol_size
-         , bool useSingleGeneration
          );
 
     virtual ~Flow();
@@ -301,7 +297,10 @@ protected:
     //Return the maximum window size
     uint16_t window_size;
 
-    bool useSingleGeneration;
+    bool useSingleGeneration;//if true, only a single generation is allowed
+
+    uint16_t calculateWindowSize();
+
 
     //Define the current base window
     uint16_t leftBoundGenerationId;

@@ -21,20 +21,29 @@ namespace ncorp {
 //
 //using namespace std;
 //
-Flow::Flow(Ncorp* mNcorp, IPv4Address nId, uint16_t ident,
-        IPv4Address src, IPv4Address dest, Role rl, uint32_t gen_size,
-        uint32_t symb_size, bool usg) :
+Flow::Flow(Ncorp* mNcorp, IPv4Address nId, uint16_t ident, IPv4Address src,
+        IPv4Address dest) :
         mainNcorp(mNcorp), nodeId(nId), id(ident), source(src), destination(
-                dest), role(rl), generation_size(gen_size), symbol_size(
-                symb_size), window_size(1), useSingleGeneration(usg), leftBoundGenerationId(
-                1), credits(0), generations([](const std::shared_ptr<Generation>& g1, const std::shared_ptr<Generation>& g2){return g1->getId() < g2->getId();}) {
+                dest), window_size(1), leftBoundGenerationId(1), credits(0), generations(
+                [](const std::shared_ptr<Generation>& g1, const std::shared_ptr<Generation>& g2) {return g1->getId() < g2->getId();}) {
+    generation_size = mainNcorp->par("CCACKGenerationSize");
+    gto_alpha = mainNcorp->par("CCACKGtoAlpha"); //1.0 / 8.0;
+    gto_beta = mainNcorp->par("CCACKGtoBeta"); //1.0 / 4.0;
+    useSingleGeneration = mainNcorp->par("CCACKUseSingleGeneration");
+    symbol_size = mainNcorp->par("CCACKPayloadSize");
+
+    if(nodeId == source)
+        role = SENDER;
+    else if(nodeId == destination)
+        role = RECEIVER;
+    else role = RELAY;
+
     gto = 3 * generation_size;
     sgtt = -1;
     gttvar = -1;
-    gto_alpha = mainNcorp->par("CCACKGtoAlpha");//1.0 / 8.0;
-    gto_beta = mainNcorp->par("CCACKGtoBeta"); //1.0 / 4.0;
 
-    fprintf(stderr, "gto = %f\nsgtt = %f\ngttvar = %f\n\n", gto.dbl(), sgtt.dbl(), gttvar.dbl());
+    fprintf(stderr, "gto = %f\nsgtt = %f\ngttvar = %f\n\n", gto.dbl(),
+            sgtt.dbl(), gttvar.dbl());
 }
 
 Flow::~Flow() {
@@ -51,8 +60,8 @@ double Flow::calculateDifferentialBacklog() {
 
     for (auto gen = generations.begin();
             gen != generations.end()
-                    && ((*gen)->getId() - leftBoundGenerationId) < window_size;
-            gen++) {
+                    && ((*gen)->getId() - leftBoundGenerationId)
+                            < calculateWindowSize(); gen++) {
         dbl += (*gen)->calculateDifferentialBacklog();
     }
     return dbl;
@@ -71,8 +80,8 @@ uint16_t Flow::nextGenerationId() {
 std::shared_ptr<Generation> Flow::getCurrentGeneration() {
     for (auto i = generations.begin();
             i != generations.end()
-                    && ((*i)->getId() - leftBoundGenerationId) < window_size;
-            i++) {
+                    && ((*i)->getId() - leftBoundGenerationId)
+                            < calculateWindowSize(); i++) {
         if ((*i)->isTransmitting())
             return *i;
     }
@@ -127,7 +136,8 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
             packet->setFlowId(id);
             packet->setGenerationId(leftBoundGenerationId);
 
-            debugprintf(stderr, LOG_LEVEL_3, "Pacote mais antigo que a geração atual. Retornando um CODEDEACK\n");
+            debugprintf(stderr, LOG_LEVEL_3,
+                    "Pacote mais antigo que a geração atual. Retornando um CODEDEACK\n");
             result = packet;
             break;
 
@@ -144,10 +154,10 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
 
                 }); //Remove todas as gerações antigas
 
-        std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> gen){
-            generations.erase(gen);
-        });
-
+        std::for_each(generationsToDrop.begin(), generationsToDrop.end(),
+                [this](std::shared_ptr<Generation> gen) {
+                    generations.erase(gen);
+                });
 
         auto generationIt = std::find_if(generations.begin(), generations.end(),
                 [generationId](std::shared_ptr<Generation> generation) {
@@ -158,8 +168,8 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
         if (generationIt == generations.end()) { //A geração não existe
             debugprintf(stderr, LOG_LEVEL_3, "Criando nova geracao\n");
             std::shared_ptr<Generation> newGeneration(
-                    new Generation(nodeId.getInt(), generationId, role, generation_size,
-                            symbol_size, payloadSize));
+                    new Generation(nodeId.getInt(), generationId, role,
+                            generation_size, symbol_size, payloadSize));
             generations.insert(newGeneration);
             generation = newGeneration;
         } else {
@@ -170,7 +180,8 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
         generation->pushEncodedData(codedPacket); //Repassa o pacote codificado para a geração correta
 
         if (generation != getCurrentGeneration()) {
-            debugprintf(stderr, LOG_LEVEL_3, "Retornando pacote CodedAck pois a geracao recebida eh diferente da corrente\n");
+            debugprintf(stderr, LOG_LEVEL_3,
+                    "Retornando pacote CodedAck pois a geracao recebida eh diferente da corrente\n");
             auto packet = new CodedAck();
             packet->setFlowId(id);
             packet->setAckGenerationId(generationId);
@@ -202,7 +213,8 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
             packet->setFlowId(id);
             packet->setGenerationId(leftBoundGenerationId);
             result = packet;
-            debugprintf(stderr, LOG_LEVEL_3, "Pacote mais antigo que a geração atual. Retornando um CODEDEACK\n");
+            debugprintf(stderr, LOG_LEVEL_3,
+                    "Pacote mais antigo que a geração atual. Retornando um CODEDEACK\n");
             break;
         }
 
@@ -215,8 +227,8 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
         if (generationIt == generations.end()) { //A geração não existe
             debugprintf(stderr, LOG_LEVEL_3, "Criando nova geracao\n");
             std::shared_ptr<Generation> newGeneration(
-                    new Generation(nodeId.getInt(), generationId, role, generation_size,
-                            symbol_size, payloadSize));
+                    new Generation(nodeId.getInt(), generationId, role,
+                            generation_size, symbol_size, payloadSize));
             generations.insert(newGeneration);
             generation = newGeneration;
         } else {
@@ -226,7 +238,8 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
         generation->pushEncodedData(codedPacket);
         if (generation->getId() == leftBoundGenerationId
                 && generation->isComplete()) {
-            debugprintf(stderr, LOG_LEVEL_3, "Geracao completa. Entregando dados da geracao\n");
+            debugprintf(stderr, LOG_LEVEL_3,
+                    "Geracao completa. Entregando dados da geracao\n");
             std::vector<std::shared_ptr<Generation>> generationsToDrop;
             for (auto it = generations.begin();
                     it != generations.end()
@@ -239,9 +252,10 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
                 leftBoundGenerationId++;
             }
 
-            std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> g){
-                generations.erase(g);
-            });
+            std::for_each(generationsToDrop.begin(), generationsToDrop.end(),
+                    [this](std::shared_ptr<Generation> g) {
+                        generations.erase(g);
+                    });
 
             debugprintf(stderr, LOG_LEVEL_3, "Retornando CODED_EACK\n");
             auto packet = new CodedEAck();
@@ -277,7 +291,7 @@ void Flow::handleEAck(uint16_t generationId) {
             return;
 
         if (role == SENDER)
-            updateGto(generationId);//
+            updateGto(generationId); //
 
         leftBoundGenerationId = generationId;
         std::vector<std::shared_ptr<Generation>> generationsToDrop;
@@ -288,9 +302,10 @@ void Flow::handleEAck(uint16_t generationId) {
             generationsToDrop.push_back(*it);
 //            generations.erase(it); //Remove todas as gerações anteriores ao LB
         }
-        std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> g){
-            generations.erase(g);
-        });
+        std::for_each(generationsToDrop.begin(), generationsToDrop.end(),
+                [this](std::shared_ptr<Generation> g) {
+                    generations.erase(g);
+                });
     }
 
 }
@@ -319,7 +334,8 @@ void Flow::updateGto(uint16_t generationId) {
 
         gto = max(simtime_t(1), sgtt + 4 * gttvar);
 
-        fprintf(stderr, "R' = %f\ngto = %f\nsgtt = %f\ngttvar = %f\n\n", r.dbl(), gto.dbl(), sgtt.dbl(), gttvar.dbl());
+        fprintf(stderr, "R' = %f\ngto = %f\nsgtt = %f\ngttvar = %f\n\n",
+                r.dbl(), gto.dbl(), sgtt.dbl(), gttvar.dbl());
     }
 }
 
@@ -328,7 +344,7 @@ void Flow::pushRawBlock(std::vector<uint8_t> payload) {
     std::copy(payload.begin(), payload.end(), std::back_inserter(rawData));
     fprintf(stderr, "Bloco recebido. Size = %lu\n", payload.size());
     while (rawData.size() >= generation_size * symbol_size) //Verifica se foi ultrapassado o tamanho total de dados da geração
-            { //Repassa os dados para a geração
+    { //Repassa os dados para a geração
         std::vector<uint8_t> newGen;
         std::copy_n(rawData.begin(), generation_size * symbol_size,
                 std::back_inserter(newGen));
@@ -336,8 +352,8 @@ void Flow::pushRawBlock(std::vector<uint8_t> payload) {
                 rawData.begin() + (generation_size * symbol_size));
         auto genId = nextGenerationId();
         std::shared_ptr<Generation> generation(
-                new Generation(nodeId.getInt(), genId, generation_size, symbol_size,
-                        newGen, generation_size * symbol_size));
+                new Generation(nodeId.getInt(), genId, generation_size,
+                        symbol_size, newGen, generation_size * symbol_size));
         generations.insert(generation);
         fprintf(stderr, "Geração criada ==> Id = %d!\n", genId);
         fprintf(stderr, "rawDate::Size = %lu\n", rawData.size());
@@ -362,8 +378,8 @@ void Flow::flush() {
     auto genId = nextGenerationId();
     fprintf(stderr, "Geração criada ==> Id = %d\n", genId);
     std::shared_ptr<Generation> generation(
-            new Generation(nodeId.getInt(), genId, generation_size, symbol_size, newGen,
-                    validPayload));
+            new Generation(nodeId.getInt(), genId, generation_size, symbol_size,
+                    newGen, validPayload));
     generations.insert(generation);
 }
 
@@ -396,7 +412,6 @@ CodedDataAck* Flow::generateNewPacket() {
             break;
         }
 
-
         auto packet = new CodedDataAck();
         packet->setFlowSrcAddr(source);
         packet->setFlowDstAddr(destination);
@@ -411,9 +426,9 @@ CodedDataAck* Flow::generateNewPacket() {
         packet->setPayloadSize(currentGeneration->getPayloadSize());
 
         auto p = currentGeneration->generateEncodedPacket();
-        packet->setEncodingVector(std::get<0>(p));
-        packet->setPayload(std::get<1>(p));
-        packet->setInovative(std::get<2>(p));
+        packet->setEncodingVector(std::get < 0 > (p));
+        packet->setPayload(std::get < 1 > (p));
+        packet->setInovative(std::get < 2 > (p));
 
         auto timeout = currentGeneration->getTimeoutMsg();
         if (!timeout->isScheduled()) {
@@ -444,11 +459,11 @@ CodedDataAck* Flow::generateNewPacket() {
 
         packet->setAckVector(currentGeneration->retrieveCurrentAckVector());
         auto p = currentGeneration->generateEncodedPacket();
-        packet->setEncodingVector(std::get<0>(p));
-        packet->setPayload(std::get<1>(p));
-        packet->setInovative(std::get<2>(p));
+        packet->setEncodingVector(std::get < 0 > (p));
+        packet->setPayload(std::get < 1 > (p));
+        packet->setInovative(std::get < 2 > (p));
         packet->setPayloadSize(currentGeneration->getPayloadSize());
-        result =  packet;
+        result = packet;
     }
         break;
     default:
@@ -501,9 +516,10 @@ void Flow::processTimer(cMessage* msg) {
                 generationsToDrop.push_back(*it);
             }
 
-            std::for_each(generationsToDrop.begin(), generationsToDrop.end(), [this](std::shared_ptr<Generation> gen){
-                generations.erase(gen);
-            });
+            std::for_each(generationsToDrop.begin(), generationsToDrop.end(),
+                    [this](std::shared_ptr<Generation> gen) {
+                        generations.erase(gen);
+                    });
 
         } else {
             cRuntimeError(mainNcorp,
@@ -519,6 +535,10 @@ void Flow::processTimer(cMessage* msg) {
 
 void Flow::printInfo() {
 
+}
+
+uint16_t Flow::calculateWindowSize() {
+    return useSingleGeneration ? 1 : window_size;
 }
 
 }

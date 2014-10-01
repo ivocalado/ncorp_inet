@@ -294,9 +294,6 @@ protected:
     //Local address
     IPv4Address myNetAddr;
 
-    //Defines if will be used the baseline ccack with only one generation active of a window-based
-    bool useSingleGeneration;
-
     //Generation size defined in terms of native packets
     uint32_t generation_size;
 
