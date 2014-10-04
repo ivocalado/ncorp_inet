@@ -297,9 +297,13 @@ protected:
     //Return the maximum window size
     uint16_t window_size;
 
+    simtime_t baseDT;
+
     bool useSingleGeneration;//if true, only a single generation is allowed
 
     uint16_t calculateWindowSize();
+
+    double calculateExpectedSendingRate();
 
 
     //Define the current base window

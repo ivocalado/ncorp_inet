@@ -24,7 +24,7 @@ namespace ncorp {
 Flow::Flow(Ncorp* mNcorp, IPv4Address nId, uint16_t ident, IPv4Address src,
         IPv4Address dest) :
         mainNcorp(mNcorp), nodeId(nId), id(ident), source(src), destination(
-                dest), window_size(1), leftBoundGenerationId(1), credits(0), generations(
+                dest), window_size(1), baseDT(MAXTIME), leftBoundGenerationId(1),credits(0), generations(
                 [](const std::shared_ptr<Generation>& g1, const std::shared_ptr<Generation>& g2) {return g1->getId() < g2->getId();}) {
     generation_size = mainNcorp->par("CCACKGenerationSize");
     gto_alpha = mainNcorp->par("CCACKGtoAlpha"); //1.0 / 8.0;
@@ -78,14 +78,24 @@ uint16_t Flow::nextGenerationId() {
 
 //Recupera a geração corrente, dentro da janela de transmissão para transmissão ou um objeto falso (operator bool() )
 std::shared_ptr<Generation> Flow::getCurrentGeneration() {
-    for (auto i = generations.begin();
-            i != generations.end()
-                    && ((*i)->getId() - leftBoundGenerationId)
-                            < calculateWindowSize(); i++) {
-        if ((*i)->isTransmitting())
-            return *i;
+    std::shared_ptr<Generation> result;
+
+    if (role == SENDER) {
+        for (auto i = generations.begin();
+                i != generations.end()
+                        && ((*i)->getId() - leftBoundGenerationId)
+                                < calculateWindowSize(); i++) {
+            if ((*i)->isTransmitting())
+                result = *i;
+        }
+    } else if (role == RELAY) {
+        for (auto i = generations.begin(); i != generations.end(); i++) {
+            if ((*i)->isTransmitting())
+                result = *i;
+        }
     }
-    return std::shared_ptr<Generation>();
+
+    return result;
 }
 
 bool Flow::isReadyToPushUp() {
@@ -283,25 +293,70 @@ NcorpPacket* Flow::handleCodedPacket(uint16_t generationId, uint16_t baseWindow,
     return result;
 }
 
+uint16_t estimateNewWindowSize(uint16_t currentWindowSize,
+        double expectedSendingRate, double actualSendingRate,
+        simtime_t baseDT) {
+    double d = expectedSendingRate - actualSendingRate;
+    double alpha = 1.0 / baseDT.dbl();
+    double beta = 3.0 / baseDT.dbl();
+
+    uint16_t newWindowSize = 1;
+
+    if (d < alpha)
+        newWindowSize = currentWindowSize + 1;
+    else if (alpha <= d && d <= beta)
+        newWindowSize = currentWindowSize;
+    else
+        newWindowSize = currentWindowSize - 1;
+
+    fprintf(stderr,
+            "current_window_size = %d\nexpected_sending_rate = %f\nactual_sending_rate = %f\nd = %f\nbaseDT = %f\nalpha = %f\nbeta = %f\nnew_window_size = %d\n\n",
+            currentWindowSize, expectedSendingRate, actualSendingRate, d,
+            baseDT.dbl(), alpha, beta, newWindowSize);
+    return newWindowSize;
+}
+
 //Manipula um pacote eack. Todas as gerações menores que generationId são descartadas
 void Flow::handleEAck(uint16_t generationId) {
 
     if (role != RECEIVER) {
-        if (generationId < leftBoundGenerationId)
+        if (generationId <= leftBoundGenerationId)
             return;
 
-        if (role == SENDER)
+        if (role == SENDER) {
             updateGto(generationId); //
+
+            std::for_each(generations.begin(), generations.end(),
+                    [](std::shared_ptr<Generation> g) {
+                        g->notifyGenerationReception();
+                    });
+
+        }
 
         leftBoundGenerationId = generationId;
         std::vector<std::shared_ptr<Generation>> generationsToDrop;
+
         for (auto it = generations.begin();
                 it != generations.end()
                         && (*it)->getId() < leftBoundGenerationId; it++) {
             mainNcorp->cancelEvent((*it)->getTimeoutMsg());
+
+            if (role == SENDER) {
+                (*it)->stopTransmit();
+                baseDT = std::min(baseDT, (*it)->calculateDT());
+            }
             generationsToDrop.push_back(*it);
-//            generations.erase(it); //Remove todas as gerações anteriores ao LB
         }
+
+        if (role == SENDER) {
+            auto lastAckedGeneration = generationsToDrop.back();
+            auto actualSendingRate =
+                    lastAckedGeneration->calculateActualSendingRate();
+
+            window_size = estimateNewWindowSize(window_size,
+                    calculateExpectedSendingRate(), actualSendingRate, baseDT);
+        }
+
         std::for_each(generationsToDrop.begin(), generationsToDrop.end(),
                 [this](std::shared_ptr<Generation> g) {
                     generations.erase(g);
@@ -411,6 +466,8 @@ CodedDataAck* Flow::generateNewPacket() {
             debugprintf(stderr, LOG_LEVEL_3, "Nenhuma geracao selecionada\n");
             break;
         }
+
+        currentGeneration->startTransmit();
 
         auto packet = new CodedDataAck();
         packet->setFlowSrcAddr(source);
@@ -539,6 +596,10 @@ void Flow::printInfo() {
 
 uint16_t Flow::calculateWindowSize() {
     return useSingleGeneration ? 1 : window_size;
+}
+
+double Flow::calculateExpectedSendingRate() {
+    return static_cast<double>(window_size) / baseDT.dbl();
 }
 
 }

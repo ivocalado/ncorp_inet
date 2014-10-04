@@ -211,6 +211,11 @@ public:
 
     simtime_t calculateDT(); //Calcula DT, tempo de entrega
 
+    void notifyGenerationReception();//Informa o recebimento de uma nova geração
+
+    double calculateActualSendingRate();
+
+
 protected:
     uint32_t nodeId;
     uint16_t id;
@@ -238,6 +243,7 @@ protected:
 
     simtime_t t0; //Indica o momento que a geracao começou a ser transmitida
     simtime_t t_eack; //Indica o momento em que se recebeu o E-ack que confirme a geração
+    uint16_t ackedGenerations; //Indica o numero de gerações confirmadas
 };
 
 } /* namespace ncorp */

@@ -102,6 +102,7 @@ Generation::Generation(uint32_t nId, uint16_t ident, /*Role rl, */uint32_t sb,
         kodo::set_systematic_off(encoder); //
     timeout = new cMessage("generation-timeout", GENERATION_TIMEOUT);
     t0 = t_eack = -1.0;
+    ackedGenerations = 0;
 }
 
 Generation::Generation(uint32_t nId, uint16_t ident, Role rl, uint32_t sb,
@@ -285,6 +286,7 @@ std::tuple<std::vector<uint8_t>, std::shared_ptr<std::vector<uint8_t> >, bool> G
 //            print(coefficients, nodeId);
         }
         isInovative = true;
+
     } else {
 
         payload.reset(new std::vector<uint8_t>(decoder->payload_size()));
@@ -377,13 +379,21 @@ void Generation::startTransmit() {
 
 //Marca o fim da transmissão, ajustando o t_eack
 void Generation::stopTransmit() {
-    if (t_eack < SIMTIME_ZERO)
+    if (t0 > SIMTIME_ZERO && t_eack < SIMTIME_ZERO)
         t_eack = simTime();
 }
 
 //Calcula DT, tempo de entrega
 simtime_t Generation::calculateDT() {
-    return t_eack < SIMTIME_ZERO? MAXTIME : t_eack - t0;
+    return t_eack < SIMTIME_ZERO ? MAXTIME: t_eack - t0;
 }
 
+void Generation::notifyGenerationReception() {
+    if (t0 > SIMTIME_ZERO)
+        ackedGenerations++;
+}
+
+double Generation::calculateActualSendingRate() {
+    return static_cast<double>(ackedGenerations) / calculateDT();
+}
 } /* namespace ncorp */
