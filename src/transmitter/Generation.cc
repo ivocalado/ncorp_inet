@@ -245,8 +245,7 @@ void Generation::pushEncodedData(
         if (ebuffers.bin.addRow(coefficients)) {
             markNextPktAsInovative = true;
             if (role == RECEIVER)
-                fprintf(stderr, "%d %f\n",
-                        ++i, simTime().dbl());
+                fprintf(stderr, "%f %d\n", simTime().dbl(), ++i);
             decoder->decode(&(*payload.get())[0]);
         }
 
