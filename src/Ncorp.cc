@@ -65,6 +65,7 @@ Ncorp::Ncorp() {
     metric = NULL;
     appOutputGate = NULL;
     appInputGate = NULL;
+
 }
 
 Ncorp::~Ncorp() {
@@ -354,6 +355,7 @@ void Ncorp::handleEAckPkt(CodedEAck* packet, IPv4Address from) {
 //        fprintf(stderr, "Interrompendo fluxo\n");
         if(getMyNetAddr() == realSource) {
             fprintf(stderr, "[Time = %f] Recebimento da confirmação da transmissão da geração. A geracao %d pode ser transmitida\n", simTime().dbl(), generationId);
+            int i = 0;
         }
     }
 //    fprintf(stderr, "Ncorp::handleEAckPkt End\n\n");
@@ -551,10 +553,10 @@ void Ncorp::deliverReceivedBlock(uint16_t flowId, IPv4Address from,
             receivedBlocks[flowId] = block->size();
         else
             receivedBlocks[flowId] += block->size();
-        fprintf(stderr,
-                        "[Time = %f] Received block. Received Block = %lu, Acumullated blocks = %lu from: %s flowId = %d\n",
-                        simTime().dbl(), block->size(), receivedBlocks[flowId], convertToSrt(from).c_str(),
-                        flowId);
+//        fprintf(stderr,
+//                        "[Time = %f] Received block. Received Block = %lu, Acumullated blocks = %lu from: %s flowId = %d\n",
+//                        simTime().dbl(), block->size(), receivedBlocks[flowId], convertToSrt(from).c_str(),
+//                        flowId);
     }
 
 }

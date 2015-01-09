@@ -261,6 +261,10 @@ struct EncodeBuffers {
     Btx btx;
     Brx brx;
     BIn bin;
+
+    EncodeBuffers(uint32_t g) : btx(g), brx(g), bin(g){
+
+    }
 };
 
 

@@ -120,7 +120,7 @@ simple Ncorp like IUDPApp
         
         string destAddress = default(""); // Se vazio, indica que o nó não deve transmitir
         int flowId = default(-1); //Se -1 gera randomicamente
-        int messageLength @unit(B) = default(32 * 1500B); // length of messages to generate, in bytes
+        int messageLength @unit(B) = default(32 * 100B); // length of messages to generate, in bytes
         double sendTime @unit(s) = default(-1s); //Se -1 não transmite
         
         bool CCACKUseSingleGeneration = default(true);

@@ -92,7 +92,7 @@ Generation::Generation(uint32_t nId, uint16_t ident, /*Role rl, */uint32_t sb,
         nodeId(nId), id(ident), generation_size(sb), packet_size(symbol_sz), encoder_factory(
                 generation_size, packet_size), decoder_factory(generation_size,
                 packet_size), info_decoder_factory(generation_size,
-                packet_size), role(SENDER), timeout(0), payloadSize(pl)
+                packet_size), ebuffers(generation_size), role(SENDER), timeout(0), payloadSize(pl)
 
 {
     encoder = encoder_factory.build();
@@ -110,7 +110,7 @@ Generation::Generation(uint32_t nId, uint16_t ident, Role rl, uint32_t sb,
         nodeId(nId), id(ident), generation_size(sb), packet_size(symbol_sz), encoder_factory(
                 generation_size, packet_size), decoder_factory(generation_size,
                 packet_size), info_decoder_factory(generation_size,
-                packet_size), role(rl), timeout(0), payloadSize(pl) {
+                packet_size), ebuffers(generation_size), role(rl), timeout(0), payloadSize(pl) {
     decoder = decoder_factory.build();
     timeout = new cMessage("generation-timeout", GENERATION_TIMEOUT);
     markNextPktAsInovative = false;
@@ -245,8 +245,8 @@ void Generation::pushEncodedData(
         if (ebuffers.bin.addRow(coefficients)) {
             markNextPktAsInovative = true;
             if (role == RECEIVER)
-                fprintf(stderr, "[Time = %f] Pacote inovativo n: %d!!\n",
-                        simTime().dbl(), ++i);
+                fprintf(stderr, "%d %f\n",
+                        ++i, simTime().dbl());
             decoder->decode(&(*payload.get())[0]);
         }
 

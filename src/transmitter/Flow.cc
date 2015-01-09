@@ -62,7 +62,11 @@ double Flow::calculateDifferentialBacklog() {
             gen != generations.end()
                     && ((*gen)->getId() - leftBoundGenerationId)
                             < calculateWindowSize(); gen++) {
-        dbl += (*gen)->calculateDifferentialBacklog();
+        if((*gen)->isTransmitting()) {
+            dbl = (*gen)->calculateDifferentialBacklog();
+            break;
+        }
+
     }
     return dbl;
 }
