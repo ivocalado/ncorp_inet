@@ -1,4 +1,4 @@
 #!/bin/sh
 cd `dirname $0`
-../src/ncorp_inetmanet -n .:../src $*
-# for shared lib, use: opp_run -l ../src/ncorp_inetmanet -n .:../src $*
+../src/ncorp_inet -n .:../src $*
+# for shared lib, use: opp_run -l ../src/ncorp_inet -n .:../src $*

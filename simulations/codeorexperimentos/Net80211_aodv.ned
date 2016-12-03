@@ -16,11 +16,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 
-package ncorp_inetmanet.simulations.codeorexperimentos;
+package ncorp_inet.simulations.codeorexperimentos;
 
-import inet.networklayer.autorouting.ipv4.IPv4NetworkConfigurator;
-import inet.nodes.inet.AdhocHost;
-import inet.world.radio.ChannelControl;
+import inet.networklayer.configurator.ipv4.IPv4NetworkConfigurator;
+import inet.node.inet.AdhocHost;
+import inet.physicallayer.ieee80211.packetlevel.Ieee80211ScalarRadioMedium;
 
 
 //
@@ -37,7 +37,12 @@ network Net80211_aodv
             parameters:
                 @display("i=device/pocketpc_s;r=,,#707070");
         }
-        channelControl: ChannelControl {
+        fixhost: AdhocHost {
+            parameters:
+                @display("i=device/pocketpc_s;r=,,#707070");
+        }
+        
+        radioMedium: Ieee80211ScalarRadioMedium {
             parameters:
                 @display("p=60,50;i=misc/sun");
         }

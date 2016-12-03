@@ -1,3 +1,3 @@
-package ncorp_inetmanet.simulations;
+package ncorp_inet.simulations;
 
 @license(LGPL);
