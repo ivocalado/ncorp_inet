@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for ncorp_inet
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -L../../inetmanet-3.x/out/$$\(CONFIGNAME\)/src -lINET -KINETMANET_3_0_PROJ=../../inetmanet-3.x
+#  opp_makemake -f --deep -I../../inetmanet-3.x/src -I../../inetmanet-3.x/src/inet/routing/extras/saors/SaorsManager -L../../inetmanet-3.x/out/$$\(CONFIGNAME\)/src -lINET -KINETMANET_3_0_PROJ=../../inetmanet-3.x
 #
 
 # Name of target to be created (-o option)
@@ -15,7 +15,14 @@ USERIF_LIBS = $(ALL_ENV_LIBS) # that is, $(TKENV_LIBS) $(QTENV_LIBS) $(CMDENV_LI
 #USERIF_LIBS = $(QTENV_LIBS)
 
 # C++ include paths (with -I)
-INCLUDE_PATH = -I.
+INCLUDE_PATH = \
+    -I../../inetmanet-3.x/src \
+    -I../../inetmanet-3.x/src/inet/routing/extras/saors/SaorsManager \
+    -I. \
+    -Icontract \
+    -Ihooks \
+    -Ihosts \
+    -Iroutingprotocol
 
 # Additional object and library files to link with
 EXTRA_OBJS =
@@ -30,7 +37,7 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS =
+OBJS = $O/hooks/NcorpTransportLayerHook.o $O/routingprotocol/NcorpManager.o
 
 # Message files
 MSGFILES =
@@ -120,13 +127,70 @@ clean:
 	$(Q)-rm -rf $O
 	$(Q)-rm -f ncorp_inet ncorp_inet.exe libncorp_inet.so libncorp_inet.a libncorp_inet.dll libncorp_inet.dylib
 	$(Q)-rm -f ./*_m.cc ./*_m.h ./*_sm.cc ./*_sm.h
+	$(Q)-rm -f contract/*_m.cc contract/*_m.h contract/*_sm.cc contract/*_sm.h
+	$(Q)-rm -f hooks/*_m.cc hooks/*_m.h hooks/*_sm.cc hooks/*_sm.h
+	$(Q)-rm -f hosts/*_m.cc hosts/*_m.h hosts/*_sm.cc hosts/*_sm.h
+	$(Q)-rm -f routingprotocol/*_m.cc routingprotocol/*_m.h routingprotocol/*_sm.cc routingprotocol/*_sm.h
 
 cleanall: clean
 	$(Q)-rm -rf $(PROJECT_OUTPUT_DIR)
 
 depend:
 	$(qecho) Creating dependencies...
-	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc
+	$(Q)$(MAKEDEPEND) $(INCLUDE_PATH) -f Makefile -P\$$O/ -- $(MSG_CC_FILES) $(SM_CC_FILES)  ./*.cc contract/*.cc hooks/*.cc hosts/*.cc routingprotocol/*.cc
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
+$O/hooks/NcorpTransportLayerHook.o: hooks/NcorpTransportLayerHook.cc \
+	$(INETMANET_3_0_PROJ)/src/inet/common/Compat.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/INETDefs.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/InitStages.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/ProtocolMap.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/precompiled.h \
+	$(INETMANET_3_0_PROJ)/src/inet/features.h \
+	$(INETMANET_3_0_PROJ)/src/inet/linklayer/common/MACAddress.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/L3Address.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/ModuleIdAddress.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/ModulePathAddress.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/INetworkProtocol.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/INetworkProtocolControlInfo.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/NetworkProtocolCommand_m.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/ipv4/IPv4Address.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/ipv6/IPv6Address.h \
+	$(INETMANET_3_0_PROJ)/src/inet/opp_defines.h \
+	hooks/NcorpTransportLayerHook.h
+$O/routingprotocol/NcorpManager.o: routingprotocol/NcorpManager.cc \
+	$(INETMANET_3_0_PROJ)/src/inet/common/Compat.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/INETDefs.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/InitStages.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/ModuleAccess.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/NotifierConsts.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/TLVOption.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/TLVOption_m.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/lifecycle/ILifecycle.h \
+	$(INETMANET_3_0_PROJ)/src/inet/common/precompiled.h \
+	$(INETMANET_3_0_PROJ)/src/inet/features.h \
+	$(INETMANET_3_0_PROJ)/src/inet/linklayer/common/MACAddress.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/IPProtocolId_m.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/InterfaceEntry.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/InterfaceTable.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/InterfaceToken.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/L3Address.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/ModuleIdAddress.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/common/ModulePathAddress.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/IInterfaceTable.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/INetworkDatagram.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/IRoute.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/IRoutingTable.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/ipv4/IPv4Address.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/contract/ipv6/IPv6Address.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/ipv4/IIPv4RoutingTable.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/ipv4/IPv4Datagram.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/ipv4/IPv4Datagram_m.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/ipv4/IPv4InterfaceData.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/ipv4/IPv4Route.h \
+	$(INETMANET_3_0_PROJ)/src/inet/networklayer/ipv4/IPv4RouteRule.h \
+	$(INETMANET_3_0_PROJ)/src/inet/opp_defines.h \
+	$(INETMANET_3_0_PROJ)/src/inet/routing/extras/base/ControlManetRouting_m.h \
+	$(INETMANET_3_0_PROJ)/src/inet/routing/extras/saors/SaorsManager/SaorsManager.h \
+	routingprotocol/NcorpManager.h
 

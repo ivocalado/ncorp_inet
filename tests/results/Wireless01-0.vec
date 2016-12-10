@@ -1,0 +1,171 @@
+version 2
+run Wireless01-0-20161210-15:41:54-3627
+attr configname Wireless01
+attr datetime 20161210-15:41:54
+attr experiment Wireless01
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network WirelessA
+attr processid 3627
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.hookType "\"NcorpTransportLayerHook\""
+param *.configurator.addStaticRoutes false
+param *.host*.**.bitrate 1Mbps
+param *.host*.networkLayer.arpType "\"GlobalARP\""
+param *.host*.wlan[0].mac.fullDuplex false
+param *.host*.wlan[0].mac.useAck false
+param *.host*.wlan[0].radio.receiver.ignoreInterference true
+param *.host*.wlan[0].radio.transmitter.communicationRange 500m
+param *.host*.wlan[0].typename "\"IdealWirelessNic\""
+param *.hostA.numUdpApps 1
+param *.hostA.udpApp[0].destAddresses "\"hostB\""
+param *.hostA.udpApp[0].destPort 5000
+param *.hostA.udpApp[0].messageLength 1000B
+param *.hostA.udpApp[0].packetName "\"UDPData\""
+param *.hostA.udpApp[0].sendInterval exponential(12ms)
+param *.hostA.udpApp[0].typename "\"UDPBasicApp\""
+param *.hostB.numUdpApps 1
+param *.hostB.udpApp[0].localPort 5000
+param *.hostB.udpApp[0].typename "\"UDPSink\""
+param *.hostB.wlan[0].radio.displayCommunicationRange true
+
+vector 15  WirelessA.hostA.wlan[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 38  WirelessA.hostB.wlan[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 21  WirelessA.hostA.wlan[0].radio  radioMode:vector  ETV
+attr interpolationmode  sample-hold
+attr source  radioModeChanged
+attr title  "Radio mode, vector"
+vector 44  WirelessA.hostB.wlan[0].radio  radioMode:vector  ETV
+attr interpolationmode  sample-hold
+attr source  radioModeChanged
+attr title  "Radio mode, vector"
+vector 22  WirelessA.hostA.wlan[0].radio  receptionState:vector  ETV
+attr interpolationmode  sample-hold
+attr source  receptionStateChanged
+attr title  "Radio reception state, vector"
+vector 45  WirelessA.hostB.wlan[0].radio  receptionState:vector  ETV
+attr interpolationmode  sample-hold
+attr source  receptionStateChanged
+attr title  "Radio reception state, vector"
+vector 1  WirelessA.hostA.udpApp[0]  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 4  WirelessA.hostA.udp  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 12  WirelessA.hostA.wlan[0].queue  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr title  "received packets, vector(packetBytes)"
+vector 14  WirelessA.hostA.wlan[0].queue  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time, vector"
+vector 18  WirelessA.hostA.wlan[0].mac  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 23  WirelessA.hostA.wlan[0].radio  transmissionState:vector  ETV
+attr interpolationmode  sample-hold
+attr source  transmissionStateChanged
+attr title  "Radio transmission state, vector"
+vector 17  WirelessA.hostA.wlan[0].mac  sentDownPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets sent to lower layer, vector(packetBytes)"
+vector 42  WirelessA.hostB.wlan[0].mac  rcvdPkFromLL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromLower
+attr title  "packets received from lower layer, vector(packetBytes)"
+vector 39  WirelessA.hostB.wlan[0].mac  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 28  WirelessA.hostB.udp  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 29  WirelessA.hostB.udp  passedUpPk:vector(count)  ETV
+attr interpolationmode  none
+attr title  "packets passed up, vector(count)"
+vector 24  WirelessA.hostB.udpApp[0]  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rcvdPk
+attr title  "packets received, vector(packetBytes)"
+vector 25  WirelessA.hostB.udpApp[0]  endToEndDelay:vector  ETV
+attr interpolationmode  none
+attr source  messageAge(rcvdPk)
+attr title  "end-to-end delay, vector"
+attr unit  s
+vector 26  WirelessA.hostB.udpApp[0]  rcvdPkSeqNo:vector  ETV
+attr interpolationmode  none
+attr source  appPkSeqNo(rcvdPk)
+attr title  "received packet sequence number, vector"
+1	12	0.022315250545	1000
+1	21	0.028927832385	1000
+1	44	0.041385743993	1000
+4	14	0.022315250545	1008
+4	22	0.028927832385	1008
+4	45	0.041385743993	1008
+12	17	0.022315250545	1028
+12	25	0.028927832385	1028
+14	17	0.022315250545	0
+14	26	0.030539250545	0.00161141816
+15	0	0	0
+15	25	0.028927832385	1
+15	26	0.030539250545	0
+17	18	0.022315250545	1028
+17	27	0.030539250545	1028
+18	18	0.022315250545	1028
+18	27	0.030539250545	1028
+21	0	0	0
+21	0	0	2
+21	18	0.022315250545	3
+21	26	0.030539250545	2
+21	27	0.030539250545	3
+21	36	0.038763250545	2
+22	0	0	1
+22	18	0.022315250545	0
+22	26	0.030539250545	1
+22	27	0.030539250545	0
+22	36	0.038763250545	1
+23	18	0.022315250545	1
+23	19	0.022315250545	2
+23	26	0.030539250545	1
+23	26	0.030539250545	0
+23	27	0.030539250545	1
+23	28	0.030539250545	2
+23	36	0.038763250545	1
+23	36	0.038763250545	0
+24	35	0.030540584801	1000
+24	42	0.038764584801	1000
+25	35	0.030540584801	0.008225334256
+25	42	0.038764584801	0.009836752416
+26	35	0.030540584801	0
+26	42	0.038764584801	1
+28	34	0.030540584801	1008
+28	41	0.038764584801	1008
+29	34	0.030540584801	1
+29	41	0.038764584801	2
+38	0	0	0
+39	31	0.030540584801	1028
+39	38	0.038764584801	1028
+42	31	0.030540584801	1028
+42	38	0.038764584801	1028
+44	0	0	0
+44	0	0	2
+45	0	0	1
+45	20	0.022316584801	3
+45	29	0.030540584801	2
+45	30	0.030540584801	3
+45	37	0.038764584801	1

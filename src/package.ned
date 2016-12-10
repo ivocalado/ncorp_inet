@@ -1,3 +1,3 @@
-package ncorp_inet;
+package ncorp;
 
 @license(LGPL);
